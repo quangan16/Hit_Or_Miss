@@ -30,3 +30,14 @@
 *.exe
 *.out
 *.app
+
+# ignore all generated files 
+TrainingFramework/Debug-Nvidia
+TrainingFramework/Release-Nvidia
+Utilities/Debug-Nvidia
+Utilities/Release-Nvidia
+freetype/objs
+Debug-Nvidia
+Debug-AMD
+BIN-AMD
+.vs
