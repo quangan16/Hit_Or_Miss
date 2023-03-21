@@ -27,7 +27,7 @@ GSPlay::~GSPlay()
 void GSPlay::Init()
 {
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_play1.tga");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
@@ -53,10 +53,10 @@ void GSPlay::Init()
 
 	//animation
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	texture = ResourceManagers::GetInstance()->GetTexture("Actor1_2.tga");
-	std::shared_ptr<SpriteAnimation> obj = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 6, 3, 0.1f);
-	obj->Set2DPosition(240.0f, 400.0f);
-	obj->SetSize(30, 40);
+	texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
+	std::shared_ptr<SpriteAnimation> obj = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+	obj->Set2DPosition(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f);
+	obj->SetSize(120, -100);
 	m_listAnimation.push_back(obj);
 	m_KeyPress = 0;
 }
