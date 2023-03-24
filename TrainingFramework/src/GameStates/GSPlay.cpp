@@ -1,5 +1,5 @@
 #include "GSPlay.h"
-
+#include "Player.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Model.h"
@@ -10,6 +10,7 @@
 #include "Text.h"
 #include "GameButton.h"
 #include "SpriteAnimation.h"
+
 
 
 
@@ -26,6 +27,7 @@ GSPlay::~GSPlay()
 
 void GSPlay::Init()
 {
+	auto player = new Player(100, 10.0f, Vector2(Globals::screenWidth/2.0f, Globals::screenHeight/2.0f));
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 
@@ -55,7 +57,7 @@ void GSPlay::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
 	std::shared_ptr<SpriteAnimation> obj = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-	obj->Set2DPosition(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f);
+	obj->Set2DPosition(player->GetPlayerPosition().x, player->GetPlayerPosition().y);
 	obj->SetSize(120, -100);
 	m_listAnimation.push_back(obj);
 	m_KeyPress = 0;
@@ -155,6 +157,8 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 void GSPlay::HandleMouseMoveEvents(float x, float y)
 {
 	//Code to handle mouse event
+	Player Player;
+
 }
 
 void GSPlay::Update(float deltaTime)
