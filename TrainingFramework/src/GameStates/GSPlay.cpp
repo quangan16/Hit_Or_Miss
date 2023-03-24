@@ -27,7 +27,7 @@ GSPlay::~GSPlay()
 
 void GSPlay::Init()
 {
-	auto player = new Player(100, 10.0f, Vector2(Globals::screenWidth/2.0f, Globals::screenHeight/2.0f));
+	auto player = new Player(100, 10.0f, Vector2(Globals::screenWidth/2.0f, Globals::screenHeight/2.0f), State::NORMAL);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 
