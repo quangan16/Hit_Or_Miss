@@ -22,12 +22,13 @@ GSPlay::GSPlay()
 
 GSPlay::~GSPlay()
 {
-}
+}	
 
 
 void GSPlay::Init()
 {
-	auto player = new Player(100, 10.0f, Vector2(Globals::screenWidth/2.0f, Globals::screenHeight/2.0f), State::NORMAL);
+
+	m_player = std::make_shared<Player>(100, 10.0f, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), State::NORMAL);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 
@@ -57,7 +58,7 @@ void GSPlay::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
 	std::shared_ptr<SpriteAnimation> obj = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-	obj->Set2DPosition(player->GetPlayerPosition().x, player->GetPlayerPosition().y);
+	obj->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	obj->SetSize(120, -100);
 	m_listAnimation.push_back(obj);
 	m_KeyPress = 0;
@@ -77,12 +78,83 @@ void GSPlay::Resume()
 }
 
 
+void GSPlay::HandleAnimationState()
+{
+	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	auto shader = ResourceManagers::GetInstance()->GetShader("Animation");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
+	switch (m_player->GetPlayerState())
+	{
+	case NORMAL:
+	
+		
+		std::shared_ptr<SpriteAnimation> obj1 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj1->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj1->SetSize(120, -100);
+		m_listAnimation.push_back(obj1);
+		
+		break;
+
+	case RUNNING:
+		std::shared_ptr<SpriteAnimation> obj2 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj2->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj2->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+
+		break;
+
+	case DASHING:
+		std::shared_ptr<SpriteAnimation> obj3 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj3->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj3->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+
+		break;
+		break;
+
+	case SLOWED:
+		std::shared_ptr<SpriteAnimation> obj4 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj4->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj4->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+		break;
+
+	case BLOCKING:
+		std::shared_ptr<SpriteAnimation> obj5 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj5->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj5->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+		break;
+
+	case ROOTED:
+		std::shared_ptr<SpriteAnimation> obj6 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj6->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj6->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+		break;
+
+	case DYING:
+		std::shared_ptr<SpriteAnimation> obj7 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		obj7->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		obj7->SetSize(120, -100);
+		m_listAnimation.push_back(obj2);
+		break;
+
+		default;
+		break;
+	}
+}
+
 void GSPlay::HandleEvents()
 {
 	//Handle key event, insert more condition if you want to handle more than 4 default key
 	if (m_KeyPress & 1)//Handle event when key 'A' was pressed
 	{
-		//Code to handle event
+		m_player->SetPlayerState(RUNNING);
+		m_player->Move(-10.0f, 0.0f);
+		std::cout << m_player->GetPlayerPosition().x;
+
+
 	}
 	if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
 	{
@@ -157,7 +229,7 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 void GSPlay::HandleMouseMoveEvents(float x, float y)
 {
 	//Code to handle mouse event
-	Player Player;
+	
 
 }
 

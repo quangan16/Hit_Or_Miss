@@ -83,6 +83,9 @@ public:
 #define LOGF(...)
 #endif
 
+//Player stats
+
+
 // KEY define 
 #ifdef WIN32
 

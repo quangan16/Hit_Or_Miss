@@ -1,6 +1,6 @@
 #pragma once
 #include "CMath.h"
-typedef enum STATE { NORMAL, STUNED, SLOWED, ROOTED } State;
+typedef enum STATE { NORMAL, RUNNING, DASHING, BLOCKING, STUNED, SLOWED, ROOTED, DYING} State;
 
 class Player
 {
@@ -13,6 +13,10 @@ public:
 	Player();
 	Player(GLint health, GLfloat speed, Vector2 position, STATE playerState);
 	~Player();
+
+	void Move(GLfloat x, GLfloat y);
+	
+
 	void SetPlayerHealth(int health);
 	void SetPlayerSpeed(float speed);
 	void SetPlayerPosition(Vector2 position);

@@ -6,6 +6,7 @@ class Sprite2D;
 class Sprite3D;
 class Text;
 class GameButton;
+class Player;
 class SpriteAnimation;
 
 class GSPlay :
@@ -21,6 +22,7 @@ public:
 	void	Pause() override;
 	void	Resume() override;
 
+	void	HandleAnimationState();
 	void	HandleEvents() override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
 	void	HandleTouchEvents(float x, float y, bool bIsPressed) override;
