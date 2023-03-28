@@ -68,7 +68,7 @@ void GSMenu::Resume()
 }
 
 
-void GSMenu::HandleEvents()
+void GSMenu::HandleEvents(GLfloat deltaTime)
 {
 }
 

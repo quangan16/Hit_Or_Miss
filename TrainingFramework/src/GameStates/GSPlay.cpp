@@ -31,8 +31,10 @@ GSPlay::~GSPlay()
 
 void GSPlay::Init()
 {
-	
-	m_player = std::make_shared<Player>(100, 2.0f, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), State::IDLE);
+	const GLint PLAYER_START_HEALTH = 100;
+	const GLfloat PLAYER_SPEED = 200.0f;
+	const PlayerState playerState = IDLE;
+	m_player = std::make_shared<Player>(100, PLAYER_SPEED, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), playerState);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 	
@@ -57,8 +59,14 @@ void GSPlay::Init()
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
 	m_score = std::make_shared< Text>(shader, font, "score: 10", TextColor::RED, 1.0f);
 	m_score->Set2DPosition(Vector2(5.0f, 25.0f));
-	
-	HandleAnimationState();
+
+	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	shader = ResourceManagers::GetInstance()->GetShader("Animation");
+	texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
+	m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+	m_animationSprite->SetSize(100 * m_playerFaceDirectionX, -100);
+	m_listAnimation.push_back(m_animationSprite);
 	m_KeyPress = 0;
 }
 
@@ -90,8 +98,8 @@ void GSPlay::HandleAnimationState()
 	{
 	case IDLE: {
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		m_animationSprite->SetSize(120*m_playerFaceDirectionX, -100);
+		/*m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120*m_playerFaceDirectionX, -100);*/
 
 		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
@@ -124,6 +132,24 @@ void GSPlay::HandleAnimationState()
 		m_listAnimation.push_back(m_animationSprite);
 		break;
 	}
+	case HIT:{
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		//m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		//m_animationSprite->SetSize(120, -100);
+		m_listAnimation.clear();
+		m_listAnimation.push_back(m_animationSprite);
+		break;
+	
+	}
+	case BURNED:
+		{
+			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+			//m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+			//m_animationSprite->SetSize(120, -100);
+			m_listAnimation.clear();
+			m_listAnimation.push_back(m_animationSprite);
+			break;
+		}
 	case SLOWED: {
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
@@ -149,7 +175,7 @@ void GSPlay::HandleAnimationState()
 	return;
 }
 
-void GSPlay::HandleEvents()
+void GSPlay::HandleEvents(GLfloat deltatime)
 {
 
 	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
@@ -169,26 +195,26 @@ void GSPlay::HandleEvents()
 		{
 			m_playerFaceDirectionX = -1;
 			m_animationSprite->SetSize(120*m_playerFaceDirectionX, -100);
-			m_player->Move(-1.0f * m_player->GetPlayerSpeed(), 0.0f);
+			m_player->Move(-1.0f * m_player->GetPlayerSpeed()* deltatime, 0.0f);
 
 		}
 		if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
 		{
 			m_animationSprite->SetSize(120* m_playerFaceDirectionX, -100);
-			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed());
+			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed()*deltatime);
 
 		}
 		if (m_KeyPress & (1 << 2))//Handle event when key 'D' was pressed
 		{
 			m_playerFaceDirectionX = 1;
 			m_animationSprite->SetSize(120 * m_playerFaceDirectionX, -100);
-			m_player->Move(1.0f*m_player->GetPlayerSpeed(), 0.0f);
+			m_player->Move(1.0f*m_player->GetPlayerSpeed()* deltatime, 0.0f);
 
 		}
 		if (m_KeyPress & (1 << 3))//Handle event when key 'W' was pressed
 		{
 			m_animationSprite->SetSize(120 * m_playerFaceDirectionX, -100);
-			m_player->Move(0.0f, -1.0f*m_player->GetPlayerSpeed());
+			m_player->Move(0.0f, -1.0f*m_player->GetPlayerSpeed()* deltatime);
 
 		}
 		
@@ -197,14 +223,15 @@ void GSPlay::HandleEvents()
 	}
 	else
 	{
+
 		m_player->SetPlayerState(IDLE);
 		if (m_isCalled == true)
 		{
-
 			HandleAnimationState();
+			m_animationSprite->SetSize(120 * m_playerFaceDirectionX, -100);
+			
 			m_isCalled = false;
 		}
-		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 		
 	}
 	
@@ -276,6 +303,12 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 			break;
 		}
 	}
+
+	if(bIsPressed == true)
+	{
+		
+		std::cout << "lul";
+	}
 }
 
 void GSPlay::HandleMouseMoveEvents(float x, float y)
@@ -287,9 +320,9 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
-	HandleEvents();
-
-	std::cout << m_isCalled<<std::endl;
+	HandleEvents(deltaTime);
+	GLfloat i = deltaTime;
+	std::cout << i<<std::endl;
 	//Update button list
 	for (auto it : m_listButton)
 	{

@@ -30,7 +30,7 @@ void Player::SetPlayerPosition(Vector2 position) {
 	m_playerPosition = position;
 };
 
-void Player::SetPlayerState(State state ) {
+void Player::SetPlayerState(PlayerState state ) {
 	m_playerState = state;
 };
 
@@ -46,7 +46,7 @@ Vector2 Player::GetPlayerPosition() {
 	return m_playerPosition;
 };
 
-State Player::GetPlayerState() {
+PlayerState Player::GetPlayerState() {
 	return m_playerState;
 };
 

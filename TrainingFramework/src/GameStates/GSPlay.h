@@ -22,8 +22,8 @@ public:
 	void	Pause() override;
 	void	Resume() override;
 
-	void HandleAnimationState();
-	void	HandleEvents() override;
+	void	HandleAnimationState();
+	void	HandleEvents(GLfloat deltaTime) override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
 	void	HandleTouchEvents(float x, float y, bool bIsPressed) override;
 	void	HandleMouseMoveEvents(float x, float y) override;

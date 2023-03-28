@@ -19,10 +19,14 @@ void SkillObstacle::SetSpawnPosition(Vector2 spawnPosition)
 void SkillObstacle::SetEndPosition(Vector2 endPosition) {
 	m_endPosition = endPosition;
 }
+
 void SkillObstacle::SetSpeed(GLfloat speed){
 	m_speed = speed;
 }
-	
 
+void SkillObstacle::SetEffect(Effect effect)
+{
+	m_effect = effect;
+}
 
 
