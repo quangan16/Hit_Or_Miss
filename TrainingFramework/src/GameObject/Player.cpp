@@ -14,11 +14,9 @@ Player::~Player(){};
 
 void Player::Move(GLfloat x, GLfloat y)
 {
-	m_playerPosition.x += x;
-	m_playerPosition.y += y;
+	this->m_playerPosition.x += x;
+	this->m_playerPosition.y += y;
 }
-
-
 
 void Player::SetPlayerHealth(int health) {
 	m_playerHealth = health;

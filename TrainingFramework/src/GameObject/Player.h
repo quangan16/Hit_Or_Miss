@@ -1,6 +1,6 @@
 #pragma once
 #include "CMath.h"
-typedef enum STATE { NORMAL, RUNNING, DASHING, BLOCKING, STUNED, SLOWED, ROOTED, DYING} State;
+typedef enum STATE {IDLE, RUNNING, DASHING, BLOCKING, STUNED, SLOWED, ROOTED, DYING} State;
 
 class Player
 {

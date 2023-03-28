@@ -12,11 +12,15 @@
 #include "SpriteAnimation.h"
 
 
+bool isCalled = false;
 
 
 GSPlay::GSPlay()
 {
+	
 	m_KeyPress = 0;
+	m_isCalled = false;
+	m_playerFaceDirectionX = 1;
 }
 
 
@@ -27,11 +31,11 @@ GSPlay::~GSPlay()
 
 void GSPlay::Init()
 {
-
-	m_player = std::make_shared<Player>(100, 10.0f, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), State::NORMAL);
+	
+	m_player = std::make_shared<Player>(100, 2.0f, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), State::IDLE);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
-
+	
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	m_background = std::make_shared<Sprite2D>(model, shader, texture);
@@ -53,14 +57,8 @@ void GSPlay::Init()
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
 	m_score = std::make_shared< Text>(shader, font, "score: 10", TextColor::RED, 1.0f);
 	m_score->Set2DPosition(Vector2(5.0f, 25.0f));
-
-	//animation
-	shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
-	std::shared_ptr<SpriteAnimation> obj = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-	obj->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-	obj->SetSize(120, -100);
-	m_listAnimation.push_back(obj);
+	
+	HandleAnimationState();
 	m_KeyPress = 0;
 }
 
@@ -78,122 +76,175 @@ void GSPlay::Resume()
 }
 
 
+
+
 void GSPlay::HandleAnimationState()
 {
+	std::cout << m_player->GetPlayerState();
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("Warrior_1.tga");
+	
+	
 	switch (m_player->GetPlayerState())
 	{
-	case NORMAL:
-	
-		
-		std::shared_ptr<SpriteAnimation> obj1 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj1->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj1->SetSize(120, -100);
-		m_listAnimation.push_back(obj1);
-		
-		break;
+	case IDLE: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120*m_playerFaceDirectionX, -100);
 
-	case RUNNING:
-		std::shared_ptr<SpriteAnimation> obj2 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj2->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj2->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
+		m_listAnimation.clear();
+		m_listAnimation.push_back(m_animationSprite);
 
-		break;
-
-	case DASHING:
-		std::shared_ptr<SpriteAnimation> obj3 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj3->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj3->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
-
-		break;
-		break;
-
-	case SLOWED:
-		std::shared_ptr<SpriteAnimation> obj4 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj4->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj4->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
-		break;
-
-	case BLOCKING:
-		std::shared_ptr<SpriteAnimation> obj5 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj5->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj5->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
-		break;
-
-	case ROOTED:
-		std::shared_ptr<SpriteAnimation> obj6 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj6->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj6->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
-		break;
-
-	case DYING:
-		std::shared_ptr<SpriteAnimation> obj7 = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		obj7->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-		obj7->SetSize(120, -100);
-		m_listAnimation.push_back(obj2);
-		break;
-
-		default;
 		break;
 	}
+	case RUNNING: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 1, 0.1f);
+		//m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		//m_animationSprite->SetSize(120, -100);
+		m_listAnimation.clear();
+		m_listAnimation.push_back(m_animationSprite);
+
+		break;
+	}
+	case DASHING: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		//m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		//m_animationSprite->SetSize(120, -100);
+		m_listAnimation.push_back(m_animationSprite);
+
+		break;
+	}
+
+	case BLOCKING: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		//m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		//m_animationSprite->SetSize(120, -100);
+		m_listAnimation.clear();
+		m_listAnimation.push_back(m_animationSprite);
+		break;
+	}
+	case SLOWED: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		//m_animationSprite->SetSize(120, -100);
+		m_listAnimation.push_back(m_animationSprite);
+		break;
+	}
+	case ROOTED: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120, -100);
+		m_listAnimation.push_back(m_animationSprite);
+		break;
+	}
+	case DYING: {
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120, -100);
+		m_listAnimation.push_back(m_animationSprite);
+		break;
+	}
+	}
+	return;
 }
 
 void GSPlay::HandleEvents()
 {
-	//Handle key event, insert more condition if you want to handle more than 4 default key
-	if (m_KeyPress & 1)//Handle event when key 'A' was pressed
+
+	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+	
+	if(m_KeyPress)
 	{
 		m_player->SetPlayerState(RUNNING);
-		m_player->Move(-10.0f, 0.0f);
-		std::cout << m_player->GetPlayerPosition().x;
+		if (m_isCalled == false)
+		{
+			m_animationSprite->SetSize(120, -100);
+			
+			HandleAnimationState();
+			m_isCalled = true;
+		}
+		
+		if (m_KeyPress & 1)//Handle event when key 'A' was pressed
+		{
+			m_playerFaceDirectionX = -1;
+			m_animationSprite->SetSize(120*m_playerFaceDirectionX, -100);
+			m_player->Move(-1.0f * m_player->GetPlayerSpeed(), 0.0f);
 
+		}
+		if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
+		{
+			m_animationSprite->SetSize(120* m_playerFaceDirectionX, -100);
+			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed());
 
+		}
+		if (m_KeyPress & (1 << 2))//Handle event when key 'D' was pressed
+		{
+			m_playerFaceDirectionX = 1;
+			m_animationSprite->SetSize(120 * m_playerFaceDirectionX, -100);
+			m_player->Move(1.0f*m_player->GetPlayerSpeed(), 0.0f);
+
+		}
+		if (m_KeyPress & (1 << 3))//Handle event when key 'W' was pressed
+		{
+			m_animationSprite->SetSize(120 * m_playerFaceDirectionX, -100);
+			m_player->Move(0.0f, -1.0f*m_player->GetPlayerSpeed());
+
+		}
+		
+		
+		
 	}
-	if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
+	else
 	{
-		//Code to handle event
+		m_player->SetPlayerState(IDLE);
+		if (m_isCalled == true)
+		{
+
+			HandleAnimationState();
+			m_isCalled = false;
+		}
+		m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+		
 	}
-	if (m_KeyPress & (1 << 2))//Handle event when key 'D' was pressed
-	{
-		//Code to handle event
-	}
-	if (m_KeyPress & (1 << 3))//Handle event when key 'W' was pressed
-	{
-		//Code to handle event
-	}
+	
+	//Handle key event, insert more condition if you want to handle more than 4 default key
+	
 }
 
 void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you want to handle more than 4 default key
 {
+	
 	if (bIsPressed)
 	{
+		
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was pressed
+			
 			m_KeyPress |= 1;
+			
 			break;
 		case KEY_MOVE_BACKWARD://Key 'S' was pressed
 			m_KeyPress |= 1<<1;
+			
 			break;
 		case KEY_MOVE_RIGHT://Key 'D' was pressed
 			m_KeyPress |= 1<<2;
+			
 			break;
 		case KEY_MOVE_FORWARD://Key 'W' was pressed
 			m_KeyPress |= 1<<3;
+			
 			break;
 		default:
+			
 			break;
 		}
 	}
 	else
 	{
+		
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was released
@@ -212,6 +263,7 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			break;
 		}
 	}
+	
 }
 
 //Handle button event
@@ -237,6 +289,7 @@ void GSPlay::Update(float deltaTime)
 {
 	HandleEvents();
 
+	std::cout << m_isCalled<<std::endl;
 	//Update button list
 	for (auto it : m_listButton)
 	{

@@ -22,16 +22,18 @@ public:
 	void	Pause() override;
 	void	Resume() override;
 
-	void	HandleAnimationState();
+	void HandleAnimationState();
 	void	HandleEvents() override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
 	void	HandleTouchEvents(float x, float y, bool bIsPressed) override;
 	void	HandleMouseMoveEvents(float x, float y) override;
 	void	Update(float deltaTime) override;
 	void	Draw() override;
-	int m_KeyPress;
-
+	int		m_playerFaceDirectionX;
+	int		m_KeyPress;
+	bool	m_isCalled;
 private:
+	std::shared_ptr<SpriteAnimation>	m_animationSprite;
 	std::shared_ptr<Sprite2D>	m_background;
 	std::shared_ptr<Text>		m_score;
 	std::shared_ptr<Player>		m_player;
