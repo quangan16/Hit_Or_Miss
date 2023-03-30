@@ -1,7 +1,7 @@
 
 			------------------------------	
 	
-	Lucifer Effects (1.0)
+	Lucifer Warrior (1.0)
 
 	Commissioned from: Baldur (https://twitter.com/the__baldur)
 	Distributed by Foozle (www.foozle.io)

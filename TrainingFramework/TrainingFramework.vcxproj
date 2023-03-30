@@ -346,6 +346,7 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ObstacleSpawner.cpp" />
     <ClCompile Include="src\GameObject\SkillObstacle.cpp" />
     <ClCompile Include="src\GameObject\Player.cpp" />
     <ClCompile Include="src\Application.cpp" />
@@ -368,6 +369,7 @@
     <ClCompile Include="src\TrainingFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ObstacleSpawner.h" />
     <ClInclude Include="src\GameObject\SkillObstacle.h" />
     <ClInclude Include="src\GameObject\Player.h" />
     <ClInclude Include="src\Application.h" />

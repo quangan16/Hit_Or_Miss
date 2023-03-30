@@ -83,6 +83,9 @@ public:
 #define LOGF(...)
 #endif
 
+//Define player's initial stats
+#define MAX_HEALTH 100
+
 
 
 
