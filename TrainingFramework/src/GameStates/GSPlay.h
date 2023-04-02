@@ -1,4 +1,5 @@
 #pragma once
+#include "Enemy.h"
 #include "GameStateBase.h"
 #include "Player.h"
 #include "SkillObstacle.h"

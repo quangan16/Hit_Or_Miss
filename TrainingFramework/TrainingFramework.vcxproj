@@ -348,6 +348,7 @@
   <ItemGroup>
     <ClCompile Include="src\GameObject\CircleCollider2D.cpp" />
     <ClCompile Include="src\GameObject\BoxCollider2D.cpp" />
+    <ClCompile Include="src\GameObject\Enemy.cpp" />
     <ClCompile Include="src\GameObject\ObstacleSpawner.cpp" />
     <ClCompile Include="src\GameObject\SkillObstacle.cpp" />
     <ClCompile Include="src\GameObject\Player.cpp" />
@@ -373,6 +374,7 @@
   <ItemGroup>
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
     <ClInclude Include="src\GameObject\BoxCollider2D.h" />
+    <ClInclude Include="src\GameObject\Enemy.h" />
     <ClInclude Include="src\GameObject\ObstacleSpawner.h" />
     <ClInclude Include="src\GameObject\SkillObstacle.h" />
     <ClInclude Include="src\GameObject\Player.h" />

@@ -289,6 +289,7 @@ void GSPlay::Update(float deltaTime)
 {
 
 	HandleEvents(deltaTime);
+	EnemySpawn(deltaTime);
 	std::cout << m_obstacle->GetCurrentPosition().x<<" " <<m_obstacle->GetCurrentPosition().y<< std::endl;
 	m_obstacle->FlyToPlayer(m_obstacle->GetStartPosition(),m_player->GetPlayerPosition(), deltaTime);
 	
