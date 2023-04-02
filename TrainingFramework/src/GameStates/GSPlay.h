@@ -2,7 +2,6 @@
 #include "GameStateBase.h"
 #include "Player.h"
 #include "Enemy.h"
-#include "EnemyPool.h"
 
 class Sprite2D;
 class Sprite3D;
@@ -25,7 +24,6 @@ public:
 	void	Resume() override;
 
 	void	EnemySpawn(GLfloat deltaTime);
-	/*void	EnemyMovement(GLfloat deltaTime);*/
 	void	HandleEvents(GLfloat deltaTime) override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
 	void	HandleTouchEvents(float x, float y, bool bIsPressed) override;
@@ -46,8 +44,6 @@ private:
 	std::list<std::shared_ptr<SpriteAnimation>>	m_listAnimation;
 
 	std::shared_ptr<Enemy> m_enemy;
-	std::vector<int> removeEnemy;
 	std::vector<std::shared_ptr<Enemy>> enemies;
-	std::shared_ptr<EnemyPool> m_enemyPool;
+	std::vector<bool> activeStatus;
 };
-

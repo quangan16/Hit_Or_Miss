@@ -11,16 +11,14 @@
 #include "GameButton.h"
 #include "SpriteAnimation.h"
 #include "Enemy.h"
-#include "EnemyPool.h"
 #include "Math.h"
 
 bool isCalled;
-GLfloat waitTime;
 GLfloat spawnTime;
 
 GSPlay::GSPlay()
 {
-	
+
 	m_KeyPress = 0;
 	m_IsCalled = false;
 	m_CurrentFaceDirectionX = 1;
@@ -30,7 +28,7 @@ GSPlay::GSPlay()
 
 GSPlay::~GSPlay()
 {
-}	
+}
 
 
 void GSPlay::Init()
@@ -42,7 +40,7 @@ void GSPlay::Init()
 	m_player = std::make_shared<Player>(100, PLAYER_SPEED, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), playerState);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
-	
+
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	m_background = std::make_shared<Sprite2D>(model, shader, texture);
@@ -55,7 +53,7 @@ void GSPlay::Init()
 	button->Set2DPosition(Globals::screenWidth - 50.0f, 50.0f);
 	button->SetSize(50, 50);
 	button->SetOnClick([this]() {
-			GameStateMachine::GetInstance()->PopState();
+		GameStateMachine::GetInstance()->PopState();
 		});
 	m_listButton.push_back(button);
 
@@ -70,7 +68,7 @@ void GSPlay::Init()
 	texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownIdle.tga");
 	m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
 	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-	m_animationSprite->SetSize(100 , 100 );
+	m_animationSprite->SetSize(100, 100);
 	m_listAnimation.push_back(m_animationSprite);
 	m_KeyPress = 0;
 
@@ -78,13 +76,13 @@ void GSPlay::Init()
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
-	
-	m_enemyPool = std::make_shared<EnemyPool>(model, shader, texture, 5);
-	m_enemy = m_enemyPool->GetEnemy(model, shader, texture);
+
+	m_enemy = std::make_shared<Enemy>(model, shader, texture);
 	m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
 	m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
 	m_enemy->SetSize(100, 100);
 	enemies.push_back(m_enemy);
+	activeStatus.push_back(true);
 	spawnTime = 0;
 }
 
@@ -102,34 +100,42 @@ void GSPlay::Resume()
 }
 
 //Tao enemy
-void GSPlay::EnemySpawn(GLfloat deltaTime){
+void GSPlay::EnemySpawn(GLfloat deltaTime) {
+	std::cout << "pool" << enemies.size() << "\n";
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
 	spawnTime += deltaTime;
-	waitTime += deltaTime;
-	if (spawnTime>1) {
-		m_enemy = m_enemyPool->GetEnemy(model, shader, texture);
-		m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
+
+	if (spawnTime > 1) {
+		m_enemy = std::make_shared<Enemy>(model, shader, texture);
+		m_enemy->SetRandomPosition();
 		m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
 		m_enemy->SetSize(100, 100);
-		enemies.push_back(m_enemy);
+
+		bool isActiveAll = true;
+		for (int i = 0; i < enemies.size(); i++) {
+			if (!activeStatus[i]) {
+				isActiveAll = false;
+				enemies[i] = m_enemy;
+				activeStatus[i] = true;
+				break;
+			}
+		}
+		if (isActiveAll) {
+			enemies.push_back(m_enemy);
+			activeStatus.push_back(true);
+		}
 
 		spawnTime = 0;
 	}
-
 	for (int i = 0; i < enemies.size(); i++) {
-		auto enemy = enemies[i];
-		if (enemy->GetEnemyPosition().x < 0 || enemy->GetEnemyPosition().x > (float)Globals::screenWidth || enemy->GetEnemyPosition().y < 0 || enemy->GetEnemyPosition().y >(float)Globals::screenHeight) {
-			if (waitTime > 0.1) {
-				auto it = std::find(enemies.begin(), enemies.end(), enemy);
-				m_enemyPool->ReturnEnemy(enemy);
-				enemies.erase(it);
-				waitTime = 0;
-			}
+
+		if (enemies[i]->GetEnemyPosition().x < 0 || enemies[i]->GetEnemyPosition().x >(float)Globals::screenWidth || enemies[i]->GetEnemyPosition().y < 0 || enemies[i]->GetEnemyPosition().y >(float)Globals::screenHeight) {
+			activeStatus[i] = false;
 		}
 		else {
-			enemy->MoveTowardPlayer(m_player->GetPlayerPosition(), enemy->GetEnemySpeed(), enemy->GetEnemyPosition(), deltaTime, enemy->GetEnemyDirection());
+			enemies[i]->MoveTowardPlayer(m_player->GetPlayerPosition(), enemies[i]->GetEnemySpeed(), enemies[i]->GetEnemyPosition(), deltaTime, enemies[i]->GetEnemyDirection());
 		}
 	}
 }
@@ -139,34 +145,34 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 
 	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	m_animationSprite->SetSize(100, 100);
-	if(m_KeyPress)
+	if (m_KeyPress)
 	{
 		m_player->SetPlayerState(RUNNING);
-		
-		
+
+
 		if (m_KeyPress & 1)//Handle event when key 'A' was pressed
 		{
 
 			m_player->SetPlayerFaceDirection(LEFT);
-			m_player->Move(-1.0f * m_player->GetPlayerSpeed()* deltatime, 0.0f);
-			
+			m_player->Move(-1.0f * m_player->GetPlayerSpeed() * deltatime, 0.0f);
+
 		}
 		if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
 		{
 			m_player->SetPlayerFaceDirection(DOWN);
-			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed()*deltatime);
+			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed() * deltatime);
 
 		}
 		if (m_KeyPress & (1 << 2))//Handle event when key 'D' was pressed
 		{
 			m_player->SetPlayerFaceDirection(RIGHT);
-			m_player->Move(1.0f*m_player->GetPlayerSpeed()* deltatime, 0.0f);
+			m_player->Move(1.0f * m_player->GetPlayerSpeed() * deltatime, 0.0f);
 
 		}
 		if (m_KeyPress & (1 << 3))//Handle event when key 'W' was pressed
 		{
 			m_player->SetPlayerFaceDirection(UP);
-			m_player->Move(0.0f, -1.0f*m_player->GetPlayerSpeed()* deltatime);
+			m_player->Move(0.0f, -1.0f * m_player->GetPlayerSpeed() * deltatime);
 
 		}
 		if (m_IsCalled == false)
@@ -174,9 +180,9 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 			m_player->HandleAnimationState(m_animationSprite, m_listAnimation);
 			m_IsCalled = true;
 		}
-		
-		
-		
+
+
+
 	}
 	else
 	{
@@ -185,50 +191,50 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 		if (m_IsCalled == true)
 		{
 			m_player->HandleAnimationState(m_animationSprite, m_listAnimation);
-			
-			
+
+
 			m_IsCalled = false;
 		}
-		
+
 	}
-	
+
 	//Handle key event, insert more condition if you want to handle more than 4 default key
-	
+
 }
 
 void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you want to handle more than 4 default key
 {
-	
+
 	if (bIsPressed)
 	{
-		
+
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was pressed
-			
+
 			m_KeyPress |= 1;
-			
+
 			break;
 		case KEY_MOVE_BACKWARD://Key 'S' was pressed
-			m_KeyPress |= 1<<1;
-			
+			m_KeyPress |= 1 << 1;
+
 			break;
 		case KEY_MOVE_RIGHT://Key 'D' was pressed
-			m_KeyPress |= 1<<2;
-			
+			m_KeyPress |= 1 << 2;
+
 			break;
 		case KEY_MOVE_FORWARD://Key 'W' was pressed
-			m_KeyPress |= 1<<3;
-			
+			m_KeyPress |= 1 << 3;
+
 			break;
 		default:
-			
+
 			break;
 		}
 	}
 	else
 	{
-		
+
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was released
@@ -247,7 +253,7 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			break;
 		}
 	}
-	
+
 }
 
 //Handle button event
@@ -255,15 +261,15 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 {
 	for (auto button : m_listButton)
 	{
-		if(button->HandleTouchEvents(x, y, bIsPressed))
+		if (button->HandleTouchEvents(x, y, bIsPressed))
 		{
 			break;
 		}
 	}
 
-	if(bIsPressed == true)
+	if (bIsPressed == true)
 	{
-		
+
 		std::cout << "lul";
 	}
 }
@@ -271,13 +277,13 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 void GSPlay::HandleMouseMoveEvents(float x, float y)
 {
 	//Code to handle mouse event
-	
+
 
 }
 
 void GSPlay::Update(float deltaTime)
 {
-	
+
 	HandleEvents(deltaTime);
 	EnemySpawn(deltaTime);
 	//Update button list
@@ -314,7 +320,9 @@ void GSPlay::Draw()
 	}
 
 	//Render enemy
-	for (auto enemy : enemies) {
-		enemy->Draw();
+	for (int i = 0; i < enemies.size(); i++) {
+		if (activeStatus[i]) {
+			enemies[i]->Draw();
+		}
 	}
 }
