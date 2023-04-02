@@ -10,6 +10,7 @@
 #include "Text.h"
 #include "GameButton.h"
 #include "SpriteAnimation.h"
+#include "SkillObstacle.h"
 
 
 bool isCalled = false;
@@ -37,6 +38,8 @@ void GSPlay::Init()
 	const GLfloat PLAYER_SPEED = 300.0f;
 	const PlayerState playerState = IDLE;
 	m_player = std::make_shared<Player>(100, PLAYER_SPEED, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), playerState);
+	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0), 400.0f, NORMAL);
+	m_obstacle = std::make_shared<SkillObstacle>(Vector2(500, 0), 400.0f, NORMAL);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
 	
@@ -65,10 +68,10 @@ void GSPlay::Init()
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownIdle.tga");
-	m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
-	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-	m_animationSprite->SetSize(100 , 100 );
-	m_listAnimation.push_back(m_animationSprite);
+	m_playerAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
+	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+	m_playerAnimationSprite->SetSize(100 , 100 );
+	m_playerAnimationList.push_back(m_playerAnimationSprite);
 	m_KeyPress = 0;
 }
 
@@ -88,61 +91,61 @@ void GSPlay::Resume()
 
 
 
-void GSPlay::HandleEvents(GLfloat deltatime)
+void GSPlay::HandleEvents(GLfloat deltatime)	
 {
+	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
+	m_obstacleAnimationSprite->Set2DPosition(m_obstacle->GetCurrentPosition().x, m_obstacle->GetCurrentPosition().y);
+	m_obstacleAnimationSprite->SetSize(100, 100);
 
-	m_animationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
-	m_animationSprite->SetSize(100, 100);
+	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
+	m_playerAnimationSprite->SetSize(100, 100);
 	if(m_KeyPress)
 	{
-		m_player->SetPlayerState(RUNNING);
+		
 		
 		
 		if (m_KeyPress & 1)//Handle event when key 'A' was pressed
 		{
-
+			m_player->SetPlayerState(RUNNING);
 			m_player->SetPlayerFaceDirection(LEFT);
-			m_player->Move(-1.0f * m_player->GetPlayerSpeed()* deltatime, 0.0f);
+			m_player->Move(Vector2(-1.0f,0.0f) * m_player->GetPlayerSpeed() * deltatime);
 			
 		}
 		if (m_KeyPress & (1 << 1))//Handle event when key 'S' was pressed
 		{
+			m_player->SetPlayerState(RUNNING);
 			m_player->SetPlayerFaceDirection(DOWN);
-			m_player->Move(0.0f, 1.0f * m_player->GetPlayerSpeed()*deltatime);
+			m_player->Move(Vector2(0.0f, 1.0f) * m_player->GetPlayerSpeed() * deltatime);
+			
 
 		}
 		if (m_KeyPress & (1 << 2))//Handle event when key 'D' was pressed
 		{
+			m_player->SetPlayerState(RUNNING);
 			m_player->SetPlayerFaceDirection(RIGHT);
-			m_player->Move(1.0f*m_player->GetPlayerSpeed()* deltatime, 0.0f);
+			m_player->Move(Vector2(1.0f, 0.0f) * m_player->GetPlayerSpeed() * deltatime);
+			
 
 		}
 		if (m_KeyPress & (1 << 3))//Handle event when key 'W' was pressed
 		{
+			m_player->SetPlayerState(RUNNING);
 			m_player->SetPlayerFaceDirection(UP);
-			m_player->Move(0.0f, -1.0f*m_player->GetPlayerSpeed()* deltatime);
+			m_player->Move(Vector2(0.0f, -1.0f) * m_player->GetPlayerSpeed() * deltatime);
+			
 
 		}
 		if (m_IsCalled == false)
 		{
-			m_player->HandleAnimationState(m_animationSprite, m_listAnimation);
+			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 			m_IsCalled = true;
 		}
 		
-		
-		
-	}
-	else
+	}else
 	{
-
+		
 		m_player->SetPlayerState(IDLE);
-		if (m_IsCalled == true)
-		{
-			m_player->HandleAnimationState(m_animationSprite, m_listAnimation);
-			
-			
-			m_IsCalled = false;
-		}
+		
 		
 	}
 	
@@ -159,19 +162,21 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was pressed
-			
 			m_KeyPress |= 1;
 			
 			break;
 		case KEY_MOVE_BACKWARD://Key 'S' was pressed
+			
 			m_KeyPress |= 1<<1;
 			
 			break;
 		case KEY_MOVE_RIGHT://Key 'D' was pressed
+			
 			m_KeyPress |= 1<<2;
 			
 			break;
 		case KEY_MOVE_FORWARD://Key 'W' was pressed
+			
 			m_KeyPress |= 1<<3;
 			
 			break;
@@ -179,10 +184,11 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			
 			break;
 		}
+		
+		
 	}
 	else
 	{
-		
 		switch (key)
 		{
 		case KEY_MOVE_LEFT://Key 'A' was released
@@ -200,6 +206,12 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 		default:
 			break;
 		}
+		if (m_IsCalled == true)
+		{
+			m_player->SetPlayerState(IDLE);
+			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
+			m_IsCalled = false;
+		}
 	}
 	
 }
@@ -215,23 +227,19 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 		}
 	}
 
-	if(bIsPressed == true)
-	{
-		
-		std::cout << "lul";
-	}
 }
 
 void GSPlay::HandleMouseMoveEvents(float x, float y)
 {
 	//Code to handle mouse event
-	
 
 }
 
 void GSPlay::Update(float deltaTime)
 {
 	HandleEvents(deltaTime);
+	std::cout << m_obstacle->GetCurrentPosition().x<<" " <<m_obstacle->GetCurrentPosition().y<< std::endl;
+	m_obstacle->FlyToPlayer(m_obstacle->GetStartPosition(),m_player->GetPlayerPosition(), deltaTime);
 	
 	//Update button list
 	for (auto it : m_listButton)
@@ -240,7 +248,12 @@ void GSPlay::Update(float deltaTime)
 	}
 
 	//Update animation list
-	for (auto it : m_listAnimation)
+	for (auto it : m_playerAnimationList)
+	{
+		it->Update(deltaTime);
+	}
+
+	for (auto it : m_obstacleAnimationList)
 	{
 		it->Update(deltaTime);
 	}
@@ -261,7 +274,12 @@ void GSPlay::Draw()
 	}
 
 	//Render animation list
-	for (auto it : m_listAnimation)
+	for (auto it : m_playerAnimationList)
+	{
+		it->Draw();
+	}
+
+	for (auto it : m_obstacleAnimationList)
 	{
 		it->Draw();
 	}

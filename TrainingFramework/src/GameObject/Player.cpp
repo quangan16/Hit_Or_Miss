@@ -19,6 +19,12 @@ void Player::Move(GLfloat x, GLfloat y)
 	this->m_playerCurrentPosition.y += y;
 }
 
+void Player::Move(Vector2 v)
+{
+	this->m_playerCurrentPosition.x += v.x;
+	this->m_playerCurrentPosition.y += v.y;
+}
+
 void Player::SetPlayerHealth(int health) {
 	m_playerCurrentHealth = health;
 };
@@ -40,6 +46,7 @@ void Player::SetPlayerFaceDirection(PlayerDirection faceDirection)
 	m_playerCurrentDirection = faceDirection;
 };
 
+//Globals::void get1(Player player);
 
 GLint Player::GetPlayerHealth() {
 	return m_playerCurrentHealth;
@@ -74,49 +81,47 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 	switch (this->GetPlayerState())
 	{
 	case IDLE: {
-			if(this->GetPlayerFaceDirection() == DOWN)
+			if(this->m_playerCurrentDirection == DOWN)
 			{
 				texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");;
 				
 			}
-			else if (this->GetPlayerFaceDirection() == LEFT)
+			if (this->m_playerCurrentDirection == LEFT)
 			{
 				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftIdle.tga");
 			}
-			else if (this->GetPlayerFaceDirection() == RIGHT)
+			else if (this->m_playerCurrentDirection == RIGHT)
 			{
 				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightIdle.tga");
 				
 			}
-			else if (this->GetPlayerFaceDirection() == UP)
+			else if (this->m_playerCurrentDirection == UP)
 			{
 				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpIdle.tga");
 			}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
-		
-
 		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
 		
 		break;
 	}
 	case RUNNING: {
-		if (this->GetPlayerFaceDirection() == DOWN)
+		if (this->m_playerCurrentDirection == DOWN)
 		{
 			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownWalk.tga");
 		}
-		else if (this->GetPlayerFaceDirection() == LEFT)
+		else if (this->m_playerCurrentDirection == LEFT)
 		{
 			
 			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftWalk.tga");
 			
 		}
-		else if (this->GetPlayerFaceDirection() == RIGHT)
+		else if (this->m_playerCurrentDirection == RIGHT)
 		{
 			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightWalk.tga");
 			
 		}
-		else if (this->GetPlayerFaceDirection() == UP)
+		else if (this->m_playerCurrentDirection == UP)
 		{
 			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpWalk.tga");
 			
@@ -301,6 +306,11 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		break;
 	}
 
+}
+
+void updateWindowBoundsColision()
+{
+	
 }
 
 
