@@ -42,6 +42,8 @@
     <ClCompile Include="src\GameObject\Player.cpp" />
     <ClCompile Include="src\GameObject\SkillObstacle.cpp" />
     <ClCompile Include="ObstacleSpawner.cpp" />
+    <ClCompile Include="src\GameObject\Enemy.cpp" />
+    <ClCompile Include="src\GameObject\EnemyPool.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameManager\ResourceManagers.h" />
@@ -67,6 +69,8 @@
     <ClInclude Include="src\GameObject\Player.h" />
     <ClInclude Include="src\GameObject\SkillObstacle.h" />
     <ClInclude Include="ObstacleSpawner.h" />
+    <ClInclude Include="src\GameObject\Enemy.h" />
+    <ClInclude Include="src\GameObject\EnemyPool.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\NewFile.txt" />

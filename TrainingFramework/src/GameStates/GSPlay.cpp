@@ -10,10 +10,13 @@
 #include "Text.h"
 #include "GameButton.h"
 #include "SpriteAnimation.h"
+#include "Enemy.h"
+#include "EnemyPool.h"
+#include "Math.h"
 
-
-bool isCalled = false;
-
+bool isCalled;
+GLfloat waitTime;
+GLfloat spawnTime;
 
 GSPlay::GSPlay()
 {
@@ -70,6 +73,19 @@ void GSPlay::Init()
 	m_animationSprite->SetSize(100 , 100 );
 	m_listAnimation.push_back(m_animationSprite);
 	m_KeyPress = 0;
+
+	// enemy
+	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
+	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+	
+	m_enemyPool = std::make_shared<EnemyPool>(model, shader, texture, 5);
+	m_enemy = m_enemyPool->GetEnemy(model, shader, texture);
+	m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
+	m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+	m_enemy->SetSize(100, 100);
+	enemies.push_back(m_enemy);
+	spawnTime = 0;
 }
 
 void GSPlay::Exit()
@@ -85,8 +101,38 @@ void GSPlay::Resume()
 {
 }
 
+//Tao enemy
+void GSPlay::EnemySpawn(GLfloat deltaTime){
+	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+	spawnTime += deltaTime;
+	waitTime += deltaTime;
+	if (spawnTime>1) {
+		m_enemy = m_enemyPool->GetEnemy(model, shader, texture);
+		m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
+		m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+		m_enemy->SetSize(100, 100);
+		enemies.push_back(m_enemy);
 
+		spawnTime = 0;
+	}
 
+	for (int i = 0; i < enemies.size(); i++) {
+		auto enemy = enemies[i];
+		if (enemy->GetEnemyPosition().x < 0 || enemy->GetEnemyPosition().x > (float)Globals::screenWidth || enemy->GetEnemyPosition().y < 0 || enemy->GetEnemyPosition().y >(float)Globals::screenHeight) {
+			if (waitTime > 0.1) {
+				auto it = std::find(enemies.begin(), enemies.end(), enemy);
+				m_enemyPool->ReturnEnemy(enemy);
+				enemies.erase(it);
+				waitTime = 0;
+			}
+		}
+		else {
+			enemy->MoveTowardPlayer(m_player->GetPlayerPosition(), enemy->GetEnemySpeed(), enemy->GetEnemyPosition(), deltaTime, enemy->GetEnemyDirection());
+		}
+	}
+}
 
 void GSPlay::HandleEvents(GLfloat deltatime)
 {
@@ -231,8 +277,9 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
-	HandleEvents(deltaTime);
 	
+	HandleEvents(deltaTime);
+	EnemySpawn(deltaTime);
 	//Update button list
 	for (auto it : m_listButton)
 	{
@@ -264,5 +311,10 @@ void GSPlay::Draw()
 	for (auto it : m_listAnimation)
 	{
 		it->Draw();
+	}
+
+	//Render enemy
+	for (auto enemy : enemies) {
+		enemy->Draw();
 	}
 }
