@@ -23,6 +23,7 @@ public:
 	void	Pause() override;
 	void	Resume() override;
 
+	void	EnemySpawn(GLfloat deltaTime);
 	void	HandleEvents(GLfloat deltaTime) override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
 	void	HandleTouchEvents(float x, float y, bool bIsPressed) override;
@@ -45,5 +46,7 @@ private:
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;
 
+	std::shared_ptr<Enemy> m_enemy;
+	std::vector<std::shared_ptr<Enemy>> enemies;
+	std::vector<bool> activeStatus;
 };
-
