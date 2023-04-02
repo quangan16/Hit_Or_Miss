@@ -45,6 +45,7 @@
     <ClCompile Include="src\GameObject\BoxCollider2D.cpp" />
     <ClCompile Include="src\GameObject\CircleCollider2D.cpp" />
     <ClCompile Include="src\GameObject\Enemy.cpp" />
+    <ClCompile Include="src\GameStates\GSSetting.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameManager\ResourceManagers.h" />
@@ -73,6 +74,7 @@
     <ClInclude Include="src\GameObject\BoxCollider2D.h" />
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
     <ClInclude Include="src\GameObject\Enemy.h" />
+    <ClInclude Include="src\GameStates\GSSetting.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="src\NewFile.txt" />
