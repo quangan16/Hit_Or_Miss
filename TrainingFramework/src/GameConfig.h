@@ -85,6 +85,9 @@ public:
 
 //Define player's initial stats
 #define MAX_HEALTH 100
+#define INIT_SPEED 300.f
+#define INIT_STATE IDLE
+#define INIT_POSITION Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f)
 
 
 

@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "SkillObstacle.h"
 
+class ObstacleSpawner;
 class Sprite2D;
 class Sprite3D;
 class Text;
@@ -43,11 +44,13 @@ private:
 	std::shared_ptr<Text>		m_score;
 	std::shared_ptr<Player>		m_player;
 	std::shared_ptr<SkillObstacle> m_obstacle;
+	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;
-
+	
 	std::shared_ptr<Enemy> m_enemy;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 	std::vector<bool> activeStatus;
+	
 };
