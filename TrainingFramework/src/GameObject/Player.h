@@ -1,5 +1,6 @@
 #pragma once
 #include "CMath.h"
+#include "BoxCollider2D.h"
 #include "SpriteAnimation.h"
 #include "ResourceManagers.h"
 #include "GameConfig.h"
@@ -7,7 +8,7 @@
 using PlayerState = enum STATE { IDLE, RUNNING, DASHING, BLOCKING, HIT, BURNED, SLOWED, ROOTED, DYING };
 using PlayerDirection = enum DIRECTION{DOWN, LEFT, RIGHT, UP};
 
-class Player 
+class Player : public BoxCollider2D
 {
 protected:
 	GLint		m_playerCurrentHealth;

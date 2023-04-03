@@ -1,17 +1,20 @@
 #include "Player.h"
 
 
-Player::Player(){}
-
-Player::Player(GLint health, GLfloat speed, Vector2 position, STATE state)
+Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState) : BoxCollider2D(INIT_POSITION, 50, 50), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }
 {
 	//this->m_playerCurrentHealth = health;
 	this->m_playerCurrentSpeed = speed;
 	this->m_playerCurrentPosition = position;
-	this->m_playerCurrentState = state;
-};
+	this->m_playerCurrentState = playerState;
+}
 
-Player::~Player(){};
+Player::~Player()
+{
+	
+}
+
+
 
 void Player::Move(GLfloat x, GLfloat y)
 {
@@ -46,7 +49,6 @@ void Player::SetPlayerFaceDirection(PlayerDirection faceDirection)
 	m_playerCurrentDirection = faceDirection;
 };
 
-//Globals::void get1(Player player);
 
 GLint Player::GetPlayerHealth() {
 	return m_playerCurrentHealth;
@@ -72,10 +74,10 @@ PlayerDirection Player::GetPlayerFaceDirection()
 
 void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>	&m_listAnimation)
 {
-	std::cout << this->GetPlayerState();
+	//std::cout << this->GetPlayerState();
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");;
+	auto texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");
 
 
 	switch (this->GetPlayerState())
@@ -83,7 +85,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 	case IDLE: {
 			if(this->m_playerCurrentDirection == DOWN)
 			{
-				texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");;
+				texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");
 				
 			}
 			if (this->m_playerCurrentDirection == LEFT)
@@ -100,7 +102,10 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpIdle.tga");
 			}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
+		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+		m_animationSprite->SetSize(100, 100);
 		m_listAnimation.clear();
+
 		m_listAnimation.push_back(m_animationSprite);
 		
 		break;
@@ -128,7 +133,8 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		}
 		
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 8, 1, 0, 0.07f);
-		
+		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+		m_animationSprite->SetSize(100, 100);
 		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
 
@@ -274,8 +280,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 		}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
-		m_animationSprite->SetSize(120, -100);
+		
 		m_listAnimation.push_back(m_animationSprite);
 		break;
 	}

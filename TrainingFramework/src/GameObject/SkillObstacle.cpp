@@ -49,6 +49,12 @@ void SkillObstacle::SetObstacleEffect(Effect effect)
 	this->m_obstacleEffect = effect;
 }
 
+void SkillObstacle::SetRotationFromDirection(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2 startPos, Vector2 target)
+{
+	Vector2 direction = target - startPos;
+	m_animationSprite->SetRotation(Vector3(0.f, 0.f,atan2(direction.y, direction.x)-M_PI/2));
+}
+
 
 
 void SkillObstacle::FlyToPlayer(Vector2 startPos, Vector2 target, GLfloat deltaTime)
@@ -60,11 +66,11 @@ void SkillObstacle::FlyToPlayer(Vector2 startPos, Vector2 target, GLfloat deltaT
 
 void SkillObstacle::HandleObstacleAnimation(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation)
 {
-	
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");;
-	m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
+	auto texture = ResourceManagers::GetInstance()->GetTexture("Effects\\Rarity Effects\\Magic effect.tga");
+	m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
+	m_animationSprite->SetSize(50, 120);
 	m_listAnimation.clear();
 	m_listAnimation.push_back(m_animationSprite);
 }
