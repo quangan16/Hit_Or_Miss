@@ -373,8 +373,6 @@
     <ClCompile Include="src\TrainingFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\GameObject\ObjectPool.h" />
-    <ClInclude Include="src\GameObject\Collider2D.h" />
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
     <ClInclude Include="src\GameObject\BoxCollider2D.h" />
     <ClInclude Include="src\GameObject\Enemy.h" />

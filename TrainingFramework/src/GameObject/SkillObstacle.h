@@ -19,8 +19,6 @@ public:
 
 	Vector2 GetCurrentPosition();
 	Vector2 GetStartPosition();
-	void SetRotationFromDirection(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2 start, Vector2 target);
-	
 
 	void FlyToPlayer(Vector2 startPos, Vector2 direction, GLfloat deltaTime);
 	void SetCurrentPosition(Vector2 curentPosition);

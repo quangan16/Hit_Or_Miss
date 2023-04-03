@@ -1,10 +1,6 @@
 #include "GSPlay.h"
-
-#include <memory>
-
 #include "Player.h"
 #include "Shader.h"
-#include "ObjectPool.h"
 #include "Texture.h"
 #include "Model.h"
 #include "Camera.h"
@@ -13,7 +9,6 @@
 #include "Sprite3D.h"
 #include "Text.h"
 #include "GameButton.h"
-#include "ObstacleSpawner.h"
 #include "SpriteAnimation.h"
 #include "SkillObstacle.h"
 
@@ -38,12 +33,12 @@ GSPlay::~GSPlay()
 void GSPlay::Init()
 {
 	m_IsCalled = false;
-	ObjectPool<std::shared_ptr<SkillObstacle>>* objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
-	objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
-	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE);
-	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
-	m_obstacle = std::make_shared<SkillObstacle>(Vector2(1000, 0), 400.0f, NORMAL);
-	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
+	const GLint PLAYER_START_HEALTH = 100;
+	const GLfloat PLAYER_SPEED = 300.0f;
+	const PlayerState playerState = IDLE;
+	m_player = std::make_shared<Player>(100, PLAYER_SPEED, Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f), playerState);
+	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0), 400.0f, NORMAL);
+	m_obstacle = std::make_shared<SkillObstacle>(Vector2(500, 0), 400.0f, NORMAL);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("desertoasis.tga");
 
@@ -62,7 +57,7 @@ void GSPlay::Init()
 		GameStateMachine::GetInstance()->PopState();
 		});
 	m_listButton.push_back(button);
-	
+
 	// score
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
@@ -83,14 +78,13 @@ void GSPlay::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
 
-	/*m_enemy = std::make_shared<Enemy>(model, shader, texture);
+	m_enemy = std::make_shared<Enemy>(model, shader, texture);
 	m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
 	m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
 	m_enemy->SetSize(100, 100);
 	enemies.push_back(m_enemy);
 	activeStatus.push_back(true);
-	spawnTime = 0;*/
-	
+	spawnTime = 0;
 }
 
 void GSPlay::Exit()
@@ -108,7 +102,7 @@ void GSPlay::Resume()
 
 //Tao enemy
 void GSPlay::EnemySpawn(GLfloat deltaTime) {
-	
+	std::cout << "pool" << enemies.size() << "\n";
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
@@ -149,7 +143,10 @@ void GSPlay::EnemySpawn(GLfloat deltaTime) {
 
 void GSPlay::HandleEvents(GLfloat deltatime)	
 {
+	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
 	m_obstacleAnimationSprite->Set2DPosition(m_obstacle->GetCurrentPosition().x, m_obstacle->GetCurrentPosition().y);
+	m_obstacleAnimationSprite->SetSize(100, 100);
+
 	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	m_playerAnimationSprite->SetSize(100, 100);
 	if(m_KeyPress)
@@ -190,7 +187,6 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 		}
 		if (m_IsCalled == false)
 		{
-			
 			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 			m_IsCalled = true;
 		}
@@ -202,8 +198,6 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 		
 		
 	}
-	
-	
 
 	//Handle key event, insert more condition if you want to handle more than 4 default key
 
@@ -264,7 +258,6 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 		}
 		if (m_IsCalled == true)
 		{
-			
 			m_player->SetPlayerState(IDLE);
 			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 			m_IsCalled = false;
@@ -289,17 +282,15 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 void GSPlay::HandleMouseMoveEvents(float x, float y)
 {
 	//Code to handle mouse event
-	 
+
 }
 
 void GSPlay::Update(float deltaTime)
 {
-	m_obstacleSpawner->UpdateSpawn(deltaTime);
-	std::cout << m_obstacleSpawner->GetSpawnPosition().x <<" "<< m_obstacleSpawner->GetSpawnPosition().y<<std::endl;
+
 	HandleEvents(deltaTime);
 	EnemySpawn(deltaTime);
-	m_player->SetColliderPosition(m_player->GetPlayerPosition());
-	m_obstacle->SetRotationFromDirection(m_obstacleAnimationSprite, m_obstacle->GetStartPosition(), m_player->GetPlayerPosition());
+	std::cout << m_obstacle->GetCurrentPosition().x<<" " <<m_obstacle->GetCurrentPosition().y<< std::endl;
 	m_obstacle->FlyToPlayer(m_obstacle->GetStartPosition(),m_player->GetPlayerPosition(), deltaTime);
 	
 	//Update button list
