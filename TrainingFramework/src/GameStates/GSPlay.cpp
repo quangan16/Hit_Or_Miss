@@ -40,7 +40,7 @@ void GSPlay::Init()
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0), 400.0f, NORMAL);
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(500, 0), 400.0f, NORMAL);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("bg_grass1.tga");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("desertoasis.tga");
 
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
@@ -49,7 +49,7 @@ void GSPlay::Init()
 	m_background->SetSize(Globals::screenWidth, Globals::screenHeight);
 
 	// button close
-	texture = ResourceManagers::GetInstance()->GetTexture("btn_close.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("Back.tga");
 	std::shared_ptr<GameButton>  button = std::make_shared<GameButton>(model, shader, texture);
 	button->Set2DPosition(Globals::screenWidth - 50.0f, 50.0f);
 	button->SetSize(50, 50);
