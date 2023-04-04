@@ -30,6 +30,8 @@ public:
 	//void HandlePlayerFaceDirection();
 	void HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>	&m_listAnimation);
 
+	Vector2 GetPlayerRandomPosCircle(GLfloat radius);
+
 	void SetPlayerHealth(GLint health);
 	void SetPlayerSpeed(GLfloat speed);
 	void SetPlayerPosition(Vector2 position);

@@ -1,6 +1,7 @@
 #pragma once
 #include "Enemy.h"
 #include "GameStateBase.h"
+#include "ObjectPool.h"
 #include "Player.h"
 #include "SkillObstacle.h"
 
@@ -24,7 +25,7 @@ public:
 
 	void	Pause() override;
 	void	Resume() override;
-
+	void	UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime);
 	void	EnemySpawn(GLfloat deltaTime);
 	void	HandleEvents(GLfloat deltaTime) override;
 	void	HandleKeyEvents(int key, bool bIsPressed) override;
@@ -38,6 +39,8 @@ public:
 	int		m_KeyPress;
 	bool	m_IsCalled;
 private:
+	Vector2 m_randomPos;
+	GLfloat m_counter;
 	std::shared_ptr<SpriteAnimation>	m_playerAnimationSprite;
 	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite;
 	std::shared_ptr<Sprite2D>	m_background;
@@ -48,7 +51,7 @@ private:
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;
-	
+	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
 	std::shared_ptr<Enemy> m_enemy;
 	std::vector<std::shared_ptr<Enemy>> enemies;
 	std::vector<bool> activeStatus;

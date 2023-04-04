@@ -313,6 +313,45 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 
 }
 
+Vector2  Player::GetPlayerRandomPosCircle(GLfloat radius)
+{
+
+	bool isGetPos = false;
+		Vector2 finalPos;
+		GLfloat rand1;
+		GLfloat rand2;
+		// Seed the random number generator with the current time
+		
+		if(isGetPos == false)
+		{
+			// Generate two random numbers between 0 and 1
+			rand1 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
+			rand2 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
+			isGetPos = true;
+		}
+		
+
+		// Calculate the angle and radius of the point within the circle
+		GLfloat angle = rand1 * 2 * M_PI;
+		GLfloat radius_point = sqrt(rand2) * radius;
+
+		// Convert the angle from radians to degrees if necessary
+		GLfloat angle_degrees = angle * 180 / M_PI;
+
+		// Convert polar coordinates to Cartesian coordinates
+		GLfloat x = radius_point * cos(angle);
+		GLfloat y = radius_point * sin(angle);
+
+		// Add center coordinates to get final position
+		finalPos.x = this->m_playerCurrentPosition.x + x;
+		finalPos.y = this->m_playerCurrentPosition.y + y;
+
+		
+
+		
+		return finalPos;
+}
+
 void updateWindowBoundsColision()
 {
 	

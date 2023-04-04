@@ -8,7 +8,7 @@ template <class T>
 class ObjectPool {
 private:
     std::vector<T> availableObjects;
-    std::vector<std::shared_ptr<T>> inUseObjects;
+    std::vector<T> inUseObjects;
     static ObjectPool* instance;
     ObjectPool() {}
 public:
@@ -19,6 +19,11 @@ public:
             instance = new ObjectPool;
         }
         return instance;
+    }
+
+    void getAvailableObjectsSize()
+    {
+        std::cout << availableObjects.size();
     }
 
     void prepareObject(int poolSize, T obj) {
@@ -39,17 +44,17 @@ public:
     }
 
 
-    std::shared_ptr<T> acquireObject() {
+    T acquireObject() {
         if (availableObjects.empty()) {
             return nullptr;
         }
-        std::shared_ptr<T> obj = availableObjects.back();
+        T obj = availableObjects.back();
         availableObjects.pop_back();
         inUseObjects.push_back(obj);
         return obj;
     }
 
-    void releaseObject(std::shared_ptr<T> obj) {
+    void releaseObject(T obj) {
         auto it = std::find(inUseObjects.begin(), inUseObjects.end(), obj);
         if (it != inUseObjects.end()) {
             inUseObjects.erase(it);

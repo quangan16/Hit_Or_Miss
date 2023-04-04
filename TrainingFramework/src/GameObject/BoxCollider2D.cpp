@@ -1,6 +1,11 @@
 #include "BoxCollider2D.h"
 
 
+BoxCollider2D::BoxCollider2D()
+{
+	
+}
+
 BoxCollider2D::BoxCollider2D(Vector2 objectPos, float width, float height) {
     this->m_colliderPosition = objectPos;
     m_width = width;
