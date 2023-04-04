@@ -53,4 +53,7 @@ private:
 	std::vector<std::shared_ptr<Enemy>> enemies;
 	std::vector<bool> activeStatus;
 	
+	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
+	GLfloat m_passedCooldownTime;
+	std::shared_ptr<Sprite2D> m_skillDisplay;
 };

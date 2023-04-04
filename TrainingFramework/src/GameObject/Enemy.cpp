@@ -54,6 +54,7 @@ void Enemy::SetRandomPosition() {
 void Enemy::MoveTowardPlayer(Vector2 playerPosition, GLfloat enemySpeed, Vector2 enemyPosition, GLfloat deltaTime, GLfloat direction) {
     enemyPosition += Vector2(cos(direction), sin(direction)) * enemySpeed * deltaTime;
     SetEnemyPosition(enemyPosition.x, enemyPosition.y);
+    SetRotation(Vector3(0.f, 0.f, direction + 3.14159265359 / 2));
 }
 
 void Enemy::Draw()

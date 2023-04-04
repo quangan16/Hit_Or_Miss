@@ -18,10 +18,13 @@ protected:
 	PlayerState m_playerCurrentState;
 	std::shared_ptr<SpriteAnimation>	m_animationSprite;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_listAnimation;
+	GLboolean	m_isCooldownSkill;
+	GLfloat		m_skillActiveTime;
+	GLfloat		m_skillCooldown;
 
 public:
 	Player();
-	Player(GLint health, GLfloat speed, Vector2 position, STATE playerState);
+	Player(GLint health, GLfloat speed, Vector2 position, STATE playerState, GLboolean isActiveSkill, GLfloat m_skillCooldown, GLfloat m_skillActiveTime);
 	~Player();
 	
 	void Move(GLfloat x, GLfloat y);
@@ -39,7 +42,12 @@ public:
 	Vector2 GetPlayerPosition();
 	GLint GetPlayerHealth();
 	GLfloat GetPlayerSpeed();
+	GLfloat SetPlayerSpeed();
 	STATE GetPlayerState();
 	PlayerDirection GetPlayerFaceDirection();
-	
+
+	GLfloat GetSkillCooldown();
+	GLfloat IsCooldownSkill();
+	void SetCooldownSkil(GLboolean isCooldown);
+	void Skill(GLfloat &passedTime, GLfloat deltaTime);
 };
