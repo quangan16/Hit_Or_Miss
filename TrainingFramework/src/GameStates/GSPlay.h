@@ -59,4 +59,11 @@ private:
 
 	std::shared_ptr<GameButton> m_soundButtonPlay;
 	std::shared_ptr<GameButton> m_soundButtonOff;
+
+	//std::shared_ptr<GameButton> m_backMenuButton;
+
+	std::shared_ptr<Sprite2D>	m_heartIcon;
+
+	
+	std::vector<std::shared_ptr<Sprite2D>> m_heartIcons;
 };

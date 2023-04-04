@@ -52,14 +52,33 @@ void GSPlay::Init()
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(1000, 0), 400.0f, NORMAL);
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
+
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("desertoasis.tga");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("map.tga");
 
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	m_background = std::make_shared<Sprite2D>(model, shader, texture);
 	m_background->Set2DPosition((float)Globals::screenWidth / 2.0f, (float)Globals::screenHeight / 2.0f);
 	m_background->SetSize(Globals::screenWidth, Globals::screenHeight);
+
+	// heart icon
+	texture = ResourceManagers::GetInstance()->GetTexture("heart.tga");
+	m_heartIcon = std::make_shared<Sprite2D>(model, shader, texture);
+	m_heartIcon->Set2DPosition(50, 50);
+	m_heartIcon->SetSize(50, 50);
+
+	m_heartIcons.push_back(m_heartIcon);
+
+	m_heartIcon = std::make_shared<Sprite2D>(model, shader, texture);
+	m_heartIcon->Set2DPosition(100, 50);
+	m_heartIcon->SetSize(50, 50);
+	m_heartIcons.push_back(m_heartIcon);
+
+	m_heartIcon = std::make_shared<Sprite2D>(model, shader, texture);
+	m_heartIcon->Set2DPosition(150, 50);
+	m_heartIcon->SetSize(50, 50);
+	m_heartIcons.push_back(m_heartIcon);
 
 	// Skill 
 	texture = ResourceManagers::GetInstance()->GetTexture("Ghost.tga");
@@ -101,11 +120,21 @@ void GSPlay::Init()
 		ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
 		});
 	
-	// score
+	// You lose! text
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
-	m_score = std::make_shared< Text>(shader, font, "score: 10", TextColor::RED, 1.0f);
-	m_score->Set2DPosition(Vector2(5.0f, 25.0f));
+	m_score = std::make_shared< Text>(shader, font, "You lose!", TextColor::RED, 3.0f);
+	m_score->Set2DPosition(Vector2(500.0f, 280.0f));
+
+	//// back menu button
+	//texture = ResourceManagers::GetInstance()->GetTexture("Home.tga");
+	//m_backMenuButton = std::make_shared<GameButton>(model, shader, texture);
+	//m_backMenuButton->Set2DPosition(500.0f, 350.0f);
+	//m_backMenuButton->SetSize(50, 50);
+	//m_backMenuButton->SetOnClick([this]() {
+	//	GameStateMachine::GetInstance()->ChangeState(StateType::STATE_MENU);
+	//	});
+	////m_listButton.push_back(button);
 
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
@@ -116,18 +145,20 @@ void GSPlay::Init()
 	m_playerAnimationList.push_back(m_playerAnimationSprite);
 	m_KeyPress = 0;
 
-	// enemy
-	/*model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
-	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");*/
 
-	/*m_enemy = std::make_shared<Enemy>(model, shader, texture);
-	m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
-	m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
-	m_enemy->SetSize(100, 100);
-	enemies.push_back(m_enemy);
-	activeStatus.push_back(true);
-	spawnTime = 0;*/
+
+	//// enemy
+	//model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	//shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
+	//texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+
+	//m_enemy = std::make_shared<Enemy>(model, shader, texture);
+	//m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
+	//m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+	//m_enemy->SetSize(100, 100);
+	//enemies.push_back(m_enemy);
+	//activeStatus.push_back(true);
+	
 
 	if (isPlayingSound == 1)
 	{
@@ -138,6 +169,8 @@ void GSPlay::Init()
 		isPlayingSoundPlay = 1;
 	}
 	
+	
+
 }
 
 void GSPlay::Exit()
@@ -158,12 +191,17 @@ void GSPlay::Resume()
 {
 }
 
+//void GSPlay::CheckCollision()
+//{
+//	CheckCollision();
+//}
+
 //Tao enemy
 void GSPlay::EnemySpawn(GLfloat deltaTime) {
 	
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("mine.tga");
 	spawnTime += deltaTime;
 
 	if (spawnTime > 1) {
@@ -372,14 +410,15 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
-	std::cout << "passTime" << m_passedCooldownTime << "\n";
+	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 
 	m_obstacleSpawner->UpdateSpawn(deltaTime);
-	std::cout << m_obstacleSpawner->GetSpawnPosition().x <<" "<< m_obstacleSpawner->GetSpawnPosition().y<<std::endl;
+	//std::cout << m_obstacleSpawner->GetSpawnPosition().x <<" "<< m_obstacleSpawner->GetSpawnPosition().y<<std::endl;
 	HandleEvents(deltaTime);
 	EnemySpawn(deltaTime);
 	m_player->SetColliderPosition(m_player->GetPlayerPosition());
+	
 	m_obstacle->SetRotationFromDirection(m_obstacleAnimationSprite, m_obstacle->GetStartPosition(), m_player->GetPlayerPosition());
 	m_obstacle->FlyToPlayer(m_obstacle->GetStartPosition(),m_player->GetPlayerPosition(), deltaTime);
 	
@@ -403,6 +442,20 @@ void GSPlay::Update(float deltaTime)
 	//Update sound button
 	m_soundButtonPlay->Update(deltaTime);
 	m_soundButtonOff->Update(deltaTime);
+	
+	for (int i = 0; i < enemies.size(); i++) {
+		if (activeStatus[i]) {
+			enemies[i]->SetColliderPosition(enemies[i]->GetEnemyPosition());
+			if (m_player->CheckCollision(enemies[i]->GetEnemyPosition(), 50, 50))
+			{
+				//std::cout << "lol";
+				activeStatus[i] = false;
+				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 1);
+			}
+				
+
+		}
+	}
 }
 
 void GSPlay::Draw()
@@ -410,8 +463,6 @@ void GSPlay::Draw()
 	//Render background
 	m_background->Draw();
 
-	//Render score text
-	m_score->Draw();
 
 	//Render button list
 	for (auto it : m_listButton)
@@ -420,28 +471,41 @@ void GSPlay::Draw()
 	}
 
 	//Render animation list
-	for (auto it : m_playerAnimationList)
+	if (m_player->GetPlayerHealth() > 0)
 	{
-		it->Draw();
+		
+		for (auto it : m_playerAnimationList)
+		{
+			it->Draw();
+		}
+
+		if (!m_player->IsCooldownSkill()) {
+			m_skillDisplay->Draw();
+		}
+		else {
+			m_skillCooldownDisplay->Draw();
+		}
+		//Render enemy
+		for (int i = 0; i < enemies.size(); i++) {
+			if (activeStatus[i]) {
+				enemies[i]->Draw();
+			}
+		}
 	}
+	
 
 	for (auto it : m_obstacleAnimationList)
 	{
 		it->Draw();
 	}
 
-	//Render enemy
-	for (int i = 0; i < enemies.size(); i++) {
-		if (activeStatus[i]) {
-			enemies[i]->Draw();
-		}
-	}
+	
 
-	if (!m_player->IsCooldownSkill()) {
-		m_skillDisplay->Draw();
-	}
-	else {
-		m_skillCooldownDisplay->Draw();
+	//Draw end game
+	if (m_player->GetPlayerHealth() < 1)
+	{
+		m_score->Draw();
+		//m_backMenuButton->Draw();
 	}
 
 	// Draw sound button
@@ -452,5 +516,19 @@ void GSPlay::Draw()
 	else
 	{
 		m_soundButtonOff->Draw();
+	}
+
+	//Draw heart
+	if (m_player->GetPlayerHealth() > 0)
+	{
+		m_heartIcons[0]->Draw();
+	}
+	if (m_player->GetPlayerHealth() > 1)
+	{
+		m_heartIcons[1]->Draw();
+	}
+	if (m_player->GetPlayerHealth() > 2)
+	{
+		m_heartIcons[2]->Draw();
 	}
 }

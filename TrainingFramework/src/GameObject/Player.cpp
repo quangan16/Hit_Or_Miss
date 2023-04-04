@@ -329,7 +329,7 @@ void Player::Skill(GLfloat &passedTime, GLfloat deltaTime) {
 	}
 	if (m_isCooldownSkill) {
 		if (passedTime < m_skillActiveTime) {
-			SetPlayerSpeed(500);
+			SetPlayerSpeed(INIT_SPEED*1.5f);
 		}
 		else
 		{

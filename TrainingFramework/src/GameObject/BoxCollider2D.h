@@ -11,7 +11,7 @@ public:
     
 
     // Check collision with another box collider
-    bool CheckCollision(const BoxCollider2D& otherBox) override;
+    bool CheckCollision(Vector2 pos, float width, float height) override;
       
 
 private:

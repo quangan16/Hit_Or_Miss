@@ -84,7 +84,6 @@ void GSSetting::Init()
 
 	m_KeyPress = 0;
 
-	std::cout << isPlayingSound << " " << isPlayingSoundMenu << " " << isPlayingSoundPlay;
 }
 
 void GSSetting::Exit()
