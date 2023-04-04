@@ -10,7 +10,12 @@ GSMenu::~GSMenu()
 {
 }
 
-
+//Sound
+std::string SoundMenu = "Alarm01.wav";
+std::string SoundPlay = "Sound1.wav";
+int isPlayingSoundMenu = 0;
+int isPlayingSoundPlay = 0;
+int isPlayingSound = 1;
 
 void GSMenu::Init()
 {
@@ -59,8 +64,8 @@ void GSMenu::Init()
 	m_textGameName = std::make_shared< Text>(shader, font, "Hit or Miss", Vector4(0.9f, 0.9f, 0.9f, 1.0f), 4.0f);
 	m_textGameName->Set2DPosition(Vector2(400, 200));
 
-	std::string name = "Alarm01.wav";
-	ResourceManagers::GetInstance()->PlaySound(name);
+	ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+	isPlayingSoundMenu = 1;
 }
 
 void GSMenu::Exit()
@@ -75,6 +80,18 @@ void GSMenu::Pause()
 
 void GSMenu::Resume()
 {
+	if (isPlayingSound == 1)
+	{
+		if (isPlayingSoundMenu == 0)
+		{
+			ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+			isPlayingSoundMenu = 1;
+		}
+		if (isPlayingSoundPlay == 1)
+		{
+			ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		}
+	}
 }
 
 

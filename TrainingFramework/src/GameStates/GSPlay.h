@@ -56,4 +56,7 @@ private:
 	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
 	GLfloat m_passedCooldownTime;
 	std::shared_ptr<Sprite2D> m_skillDisplay;
+
+	std::shared_ptr<GameButton> m_soundButtonPlay;
+	std::shared_ptr<GameButton> m_soundButtonOff;
 };

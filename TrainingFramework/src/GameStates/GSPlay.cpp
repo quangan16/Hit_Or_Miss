@@ -20,6 +20,13 @@
 bool isCalled;
 GLfloat spawnTime;
 
+//Sound
+extern std::string SoundMenu;
+extern std::string SoundPlay;
+extern int isPlayingSoundMenu;
+extern int isPlayingSoundPlay;
+extern int isPlayingSound;
+
 GSPlay::GSPlay()
 {
 
@@ -73,6 +80,26 @@ void GSPlay::Init()
 		GameStateMachine::GetInstance()->PopState();
 		});
 	m_listButton.push_back(button);
+
+	// button volumnPlay
+	auto textureP = ResourceManagers::GetInstance()->GetTexture("MusicPlay.tga");
+	m_soundButtonPlay = std::make_shared<GameButton>(model, shader, textureP);
+	m_soundButtonPlay->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
+	m_soundButtonPlay->SetSize(50, 50);
+	m_soundButtonPlay->SetOnClick([this]() {
+		isPlayingSound = 0;
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		});
+
+	// button volumnOff
+	auto textureO = ResourceManagers::GetInstance()->GetTexture("MusicOff.tga");
+	m_soundButtonOff = std::make_shared<GameButton>(model, shader, textureO);
+	m_soundButtonOff->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
+	m_soundButtonOff->SetSize(50, 50);
+	m_soundButtonOff->SetOnClick([this]() {
+		isPlayingSound = 1;
+		ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
+		});
 	
 	// score
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
@@ -101,6 +128,15 @@ void GSPlay::Init()
 	enemies.push_back(m_enemy);
 	activeStatus.push_back(true);
 	spawnTime = 0;*/
+
+	if (isPlayingSound == 1)
+	{
+		ResourceManagers::GetInstance()->StopSound(SoundMenu);
+		isPlayingSoundMenu = 0;
+
+		ResourceManagers::GetInstance()->PlaySound(SoundPlay);
+		isPlayingSoundPlay = 1;
+	}
 	
 }
 
@@ -111,6 +147,11 @@ void GSPlay::Exit()
 
 void GSPlay::Pause()
 {
+	if (isPlayingSound == 1)
+	{
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		isPlayingSoundPlay = 0;
+	}
 }
 
 void GSPlay::Resume()
@@ -312,6 +353,15 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 		}
 	}
 
+	if (isPlayingSound == 1)
+	{
+		m_soundButtonPlay->HandleTouchEvents(x, y, bIsPressed);
+	}
+	else
+	{
+		m_soundButtonOff->HandleTouchEvents(x, y, bIsPressed);
+	}
+
 }
 
 void GSPlay::HandleMouseMoveEvents(float x, float y)
@@ -349,6 +399,10 @@ void GSPlay::Update(float deltaTime)
 	{
 		it->Update(deltaTime);
 	}
+
+	//Update sound button
+	m_soundButtonPlay->Update(deltaTime);
+	m_soundButtonOff->Update(deltaTime);
 }
 
 void GSPlay::Draw()
@@ -388,5 +442,15 @@ void GSPlay::Draw()
 	}
 	else {
 		m_skillCooldownDisplay->Draw();
+	}
+
+	// Draw sound button
+	if (isPlayingSound == 1)
+	{
+		m_soundButtonPlay->Draw();
+	}
+	else
+	{
+		m_soundButtonOff->Draw();
 	}
 }
