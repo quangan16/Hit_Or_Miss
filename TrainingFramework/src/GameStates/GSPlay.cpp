@@ -42,7 +42,7 @@ void GSPlay::Init()
 	m_IsCalled = false;
 	m_objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
 	m_objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
-	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE);
+	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE, INIT_ISACTIVESKILL, INIT_SKILLCOOLDOWN, INIT_SKILLTIME);
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0),Vector2(1280, 720) , 400.0f, NORMAL);
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
@@ -344,6 +344,8 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 
 void GSPlay::Update(float deltaTime)
 {
+	std::cout << "passTime" << m_passedCooldownTime << "\n";
+	m_player->Skill(m_passedCooldownTime, deltaTime);
 	UpdateSpawn(deltaTime, 2);
 	//m_obstacle->FlyToTarget(m_obstacleSpawner->GetSpawnPosition(),m_player->GetPlayerRandomPosCircle(100.0f), deltaTime);
 	//m_obstacleSpawner->UpdateSpawn(m_player, 1,  deltaTime, m_obstacleAnimationSprite,m_obstacleAnimationList);
