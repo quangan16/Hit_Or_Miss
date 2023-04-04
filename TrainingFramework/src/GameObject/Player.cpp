@@ -1,12 +1,17 @@
 #include "Player.h"
 
 
-Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState) : BoxCollider2D(INIT_POSITION, 50, 50), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }
+Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState, GLboolean isCooldownSkill, GLfloat skillCooldown, GLfloat skillActiveTime)
+	: BoxCollider2D(INIT_POSITION, 50, 50), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }, 
+	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{skillCooldown}, m_skillActiveTime{skillActiveTime}
 {
 	//this->m_playerCurrentHealth = health;
 	this->m_playerCurrentSpeed = speed;
 	this->m_playerCurrentPosition = position;
 	this->m_playerCurrentState = playerState;
+	this->m_isCooldownSkill = isCooldownSkill;
+	this->m_skillCooldown = skillCooldown;
+	this->m_skillActiveTime = skillActiveTime;
 }
 
 Player::~Player()
@@ -357,5 +362,27 @@ void updateWindowBoundsColision()
 	
 }
 
-
-
+void Player::Skill(GLfloat &passedTime, GLfloat deltaTime) {
+	if (passedTime >= m_skillCooldown) {
+		m_isCooldownSkill = false;
+	}
+	if (m_isCooldownSkill) {
+		if (passedTime < m_skillActiveTime) {
+			SetPlayerSpeed(500);
+		}
+		else
+		{
+			SetPlayerSpeed(INIT_SPEED);
+		}
+	}
+	passedTime += deltaTime;
+}
+GLfloat Player::GetSkillCooldown() {
+	return m_skillCooldown;
+};
+void Player::SetCooldownSkil(GLboolean isCooldown) {
+	m_isCooldownSkill = isCooldown;
+};
+GLfloat Player::IsCooldownSkill() {
+	return m_isCooldownSkill;
+};

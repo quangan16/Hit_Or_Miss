@@ -29,7 +29,10 @@ public:
 private:
 	std::shared_ptr<Sprite2D>				m_background;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
-	std::shared_ptr<Text>					m_textGameName;
+	std::shared_ptr<Text>					m_textGameSetting;
+	std::shared_ptr<Text>					m_textGameVolumn;
 
+	std::shared_ptr<GameButton> m_soundButtonPlay;
+	std::shared_ptr<GameButton> m_soundButtonOff;
 };
 
