@@ -20,6 +20,13 @@
 bool isCalled;
 GLfloat spawnTime;
 
+//Sound
+extern std::string SoundMenu;
+extern std::string SoundPlay;
+extern int isPlayingSoundMenu;
+extern int isPlayingSoundPlay;
+extern int isPlayingSound;
+
 GSPlay::GSPlay()
 {
 
@@ -27,6 +34,7 @@ GSPlay::GSPlay()
 	m_IsCalled = false;
 	m_CurrentFaceDirectionX = 1;
 	m_CurrentFaceDirectionY = 1;
+	m_passedCooldownTime = INIT_SKILLCOOLDOWN;
 }
 
 
@@ -42,7 +50,7 @@ void GSPlay::Init()
 	m_IsCalled = false;
 	m_objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
 	m_objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
-	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE, INIT_ISACTIVESKILL, INIT_SKILLCOOLDOWN, INIT_SKILLTIME);
+	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE);
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0),Vector2(1280, 720) , 400.0f, NORMAL);
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
@@ -55,6 +63,16 @@ void GSPlay::Init()
 	m_background->Set2DPosition((float)Globals::screenWidth / 2.0f, (float)Globals::screenHeight / 2.0f);
 	m_background->SetSize(Globals::screenWidth, Globals::screenHeight);
 
+	// Skill 
+	texture = ResourceManagers::GetInstance()->GetTexture("Ghost.tga");
+	m_skillDisplay = std::make_shared<Sprite2D>(model, shader, texture);
+	m_skillDisplay->Set2DPosition((float)Globals::screenWidth - 75.0f, (float)Globals::screenHeight - 75.0f);
+	m_skillDisplay->SetSize(75, 75);
+	texture = ResourceManagers::GetInstance()->GetTexture("GhostCooldown.tga");
+	m_skillCooldownDisplay = std::make_shared<Sprite2D>(model, shader, texture);
+	m_skillCooldownDisplay->Set2DPosition((float)Globals::screenWidth - 75.0f, (float)Globals::screenHeight - 75.0f);
+	m_skillCooldownDisplay->SetSize(75, 75);
+
 	// button close
 	texture = ResourceManagers::GetInstance()->GetTexture("Back.tga");
 	std::shared_ptr<GameButton>  button = std::make_shared<GameButton>(model, shader, texture);
@@ -64,6 +82,26 @@ void GSPlay::Init()
 		GameStateMachine::GetInstance()->PopState();
 		});
 	m_listButton.push_back(button);
+
+	// button volumnPlay
+	auto textureP = ResourceManagers::GetInstance()->GetTexture("MusicPlay.tga");
+	m_soundButtonPlay = std::make_shared<GameButton>(model, shader, textureP);
+	m_soundButtonPlay->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
+	m_soundButtonPlay->SetSize(50, 50);
+	m_soundButtonPlay->SetOnClick([this]() {
+		isPlayingSound = 0;
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		});
+
+	// button volumnOff
+	auto textureO = ResourceManagers::GetInstance()->GetTexture("MusicOff.tga");
+	m_soundButtonOff = std::make_shared<GameButton>(model, shader, textureO);
+	m_soundButtonOff->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
+	m_soundButtonOff->SetSize(50, 50);
+	m_soundButtonOff->SetOnClick([this]() {
+		isPlayingSound = 1;
+		ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
+		});
 	
 	// score
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
@@ -81,9 +119,9 @@ void GSPlay::Init()
 	m_KeyPress = 0;
 
 	// enemy
-	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	/*model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
-	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");*/
 
 	/*m_enemy = std::make_shared<Enemy>(model, shader, texture);
 	m_enemy->SetEnemyPosition((float)Globals::screenWidth, (float)Globals::screenHeight);
@@ -92,6 +130,15 @@ void GSPlay::Init()
 	enemies.push_back(m_enemy);
 	activeStatus.push_back(true);
 	spawnTime = 0;*/
+
+	if (isPlayingSound == 1)
+	{
+		ResourceManagers::GetInstance()->StopSound(SoundMenu);
+		isPlayingSoundMenu = 0;
+
+		ResourceManagers::GetInstance()->PlaySound(SoundPlay);
+		isPlayingSoundPlay = 1;
+	}
 	
 }
 
@@ -102,6 +149,11 @@ void GSPlay::Exit()
 
 void GSPlay::Pause()
 {
+	if (isPlayingSound == 1)
+	{
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		isPlayingSoundPlay = 0;
+	}
 }
 
 void GSPlay::Resume()
@@ -117,21 +169,23 @@ void GSPlay::EnemySpawn(GLfloat deltaTime) {
 	spawnTime += deltaTime;
 
 	if (spawnTime > 1) {
-		m_enemy = std::make_shared<Enemy>(model, shader, texture);
-		m_enemy->SetRandomPosition();
-		m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
-		m_enemy->SetSize(100, 100);
+		
 
 		bool isActiveAll = true;
 		for (int i = 0; i < enemies.size(); i++) {
 			if (!activeStatus[i]) {
 				isActiveAll = false;
-				enemies[i] = m_enemy;
+				enemies[i]->SetRandomPosition();
+				enemies[i]->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - enemies[i]->GetEnemyPosition().y, m_player->GetPlayerPosition().x - enemies[i]->GetEnemyPosition().x));
 				activeStatus[i] = true;
 				break;
 			}
 		}
 		if (isActiveAll) {
+			m_enemy = std::make_shared<Enemy>(model, shader, texture);
+			m_enemy->SetRandomPosition();
+			m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+			m_enemy->SetSize(100, 100);
 			enemies.push_back(m_enemy);
 			activeStatus.push_back(true);
 		}
@@ -190,6 +244,13 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 			
 
 		}
+		if (m_KeyPress & (1 << 4))//Handle event when key space was pressed
+		{
+			if (m_passedCooldownTime >= m_player->GetSkillCooldown()) {
+				m_player->SetCooldownSkil(true);
+				m_passedCooldownTime = 0;
+			}
+		}
 		if (m_IsCalled == false)
 		{
 			
@@ -238,6 +299,11 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			m_KeyPress |= 1<<3;
 			
 			break;
+		case KEY_SPACE://Key ' ' was pressed
+
+			m_KeyPress |= 1 << 4;
+
+			break;
 		default:
 
 			break;
@@ -260,6 +326,9 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			break;
 		case KEY_MOVE_FORWARD://Key 'W' was released
 			m_KeyPress ^= 1 << 3;
+			break;
+		case KEY_SPACE://Key ' ' was released
+			m_KeyPress ^= 1 << 4;
 			break;
 		default:
 			break;
@@ -284,6 +353,15 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 		{
 			break;
 		}
+	}
+
+	if (isPlayingSound == 1)
+	{
+		m_soundButtonPlay->HandleTouchEvents(x, y, bIsPressed);
+	}
+	else
+	{
+		m_soundButtonOff->HandleTouchEvents(x, y, bIsPressed);
 	}
 
 }
@@ -344,8 +422,6 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 
 void GSPlay::Update(float deltaTime)
 {
-	std::cout << "passTime" << m_passedCooldownTime << "\n";
-	m_player->Skill(m_passedCooldownTime, deltaTime);
 	UpdateSpawn(deltaTime, 2);
 	//m_obstacle->FlyToTarget(m_obstacleSpawner->GetSpawnPosition(),m_player->GetPlayerRandomPosCircle(100.0f), deltaTime);
 	//m_obstacleSpawner->UpdateSpawn(m_player, 1,  deltaTime, m_obstacleAnimationSprite,m_obstacleAnimationList);
@@ -371,6 +447,10 @@ void GSPlay::Update(float deltaTime)
 	{
 		it->Update(deltaTime);
 	}
+
+	//Update sound button
+	m_soundButtonPlay->Update(deltaTime);
+	m_soundButtonOff->Update(deltaTime);
 }
 
 void GSPlay::Draw()
@@ -403,5 +483,22 @@ void GSPlay::Draw()
 		if (activeStatus[i]) {
 			enemies[i]->Draw();
 		}
+	}
+
+	if (!m_player->IsCooldownSkill()) {
+		m_skillDisplay->Draw();
+	}
+	else {
+		m_skillCooldownDisplay->Draw();
+	}
+
+	// Draw sound button
+	if (isPlayingSound == 1)
+	{
+		m_soundButtonPlay->Draw();
+	}
+	else
+	{
+		m_soundButtonOff->Draw();
 	}
 }
