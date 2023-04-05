@@ -2,7 +2,7 @@
 
 
 Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState, GLboolean isCooldownSkill, GLfloat skillCooldown, GLfloat skillActiveTime)
-	: BoxCollider2D(INIT_POSITION, 50, 50), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }, 
+	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }, 
 	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{skillCooldown}, m_skillActiveTime{skillActiveTime}
 {
 	//this->m_playerCurrentHealth = health;
@@ -357,9 +357,21 @@ Vector2  Player::GetPlayerRandomPosCircle(GLfloat radius)
 		return finalPos;
 }
 
-void updateWindowBoundsColision()
+void Player::UpdateWindowBoundsCollision()
 {
-	
+	std::cout << this->GetPlayerPosition().y - this->m_width / 2<<std::endl;
+	if (this->GetColliderPosition().x - this->m_width / 2 <= 0.f) {
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x + m_width/2, this->GetPlayerPosition().y));
+	}
+	else if (this->GetColliderPosition().x + this->m_width / 2 >= Globals::screenWidth) {
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x-m_width/2, this->GetPlayerPosition().y));
+	}
+	if (this->GetColliderPosition().y + this->m_height / 2 >= Globals::screenHeight) {
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x , this->GetPlayerPosition().y - m_height/2));
+	}
+	else if (this->GetColliderPosition().y - this->m_height / 2 <= 0.f) {
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height/2 ));
+	}
 }
 
 void Player::Skill(GLfloat &passedTime, GLfloat deltaTime) {

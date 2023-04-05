@@ -48,6 +48,8 @@ private:
 	std::shared_ptr<Player>		m_player;
 	std::shared_ptr<SkillObstacle> m_obstacle;
 	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner;
+	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner2;
+	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner3;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;

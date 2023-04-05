@@ -14,7 +14,7 @@ public:
     bool CheckCollision(const BoxCollider2D& otherBox) override;
       
 
-private:
+protected:
     GLfloat m_width;
     GLfloat m_height;
 };

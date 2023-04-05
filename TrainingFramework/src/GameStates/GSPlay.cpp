@@ -50,8 +50,10 @@ void GSPlay::Init()
 	m_IsCalled = false;
 	m_objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
 	m_objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
-	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE);
+	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE, INIT_ISACTIVESKILL, INIT_SKILLCOOLDOWN, INIT_SKILLTIME);
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
+	m_obstacleSpawner2 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
+	m_obstacleSpawner3 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
 	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0),Vector2(1280, 720) , 400.0f, NORMAL);
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
@@ -378,43 +380,58 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 	
 
 	// Generate random position off-screen
-	int x = rand() % Globals::screenWidth;
-	int y = rand() % Globals::screenHeight;
-	if (rand() % 2 == 0) {
-		x -= Globals::screenWidth;
+	int x, y;
+	int side = std::rand() % 4; // choose a random side of the offscreen area
+	switch (side)
+	{
+	case 0: // top side
+		x = std::rand() % (Globals::screenWidth - 50) + 50;
+		y = -std::rand() % Globals::screenWidth;
+		break;
+	case 1: // right side
+		x = Globals::screenWidth + std::rand() % 50;
+		y = std::rand() % (Globals::screenHeight - 50) + 50;
+		break;
+	case 2: // bottom side
+		x = std::rand() % (Globals::screenWidth - 50) + 50;
+		y = Globals::screenHeight + std::rand() % 50;
+		break;
+	case 3: // left side
+		x = -std::rand() % 50;
+		y = std::rand() % (Globals::screenHeight - 50) + 50;
+		break;
 	}
-	else {
-		x += Globals::screenWidth;
-	}
-	if (rand() % 2 == 0) {
-		y -= Globals::screenHeight;
-	}
-	else {
-		y += Globals::screenHeight;
-	}
+
+	// Print the random position
+	std::cout << "Random position: (" << x << ", " << y << ")" << std::endl;
 
 
 	if (m_counter >= intervalTime)
 	{
-		m_randomPos = m_player->GetPlayerRandomPosCircle(300.0f);
+		m_randomPos = m_player->GetPlayerRandomPosCircle(100.0f);
+
 		m_obstacleSpawner->SetSpawnPosition(Vector2(x, y));
 		m_obstacle = m_objectPool->acquireObject();
+		m_obstacle->SetStartPosition(m_obstacleSpawner->GetSpawnPosition());
+		m_obstacle->SetCurrentPosition(m_obstacle->GetStartPosition());
+		
 		m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
-		std::cout << "new!";
+		//std::cout << "new!";
 		m_counter = 0.f;
 		// Spawn enemy at generated position with chosen direction
 		m_objectPool->getAvailableObjectsSize();
 		/* add enemy to game world */
 	}
-	if (m_obstacle->GetCurrentPosition().x < 0 || m_obstacle->GetCurrentPosition().x >(float)Globals::screenWidth || m_obstacle->GetCurrentPosition().y < 0 || m_obstacle->GetCurrentPosition().y >(float)Globals::screenHeight) {
+	if (m_obstacle->GetCurrentPosition().x < -60.f || m_obstacle->GetCurrentPosition().x >(float)Globals::screenWidth + 60.f || m_obstacle->GetCurrentPosition().y < -60.f || m_obstacle->GetCurrentPosition().y >(float)Globals::screenHeight+ 60.f) {
+
 		m_objectPool->releaseObject(m_obstacle);
-		std::cout << m_obstacle->GetCurrentPosition().x<<std::endl;
+		//std::cout << m_obstacle->GetCurrentPosition().x<<std::endl;
 		
 	}
 	else {
 		m_obstacle->SetObstacleRotation(m_obstacleAnimationSprite, m_obstacle->GetStartPosition(), m_randomPos);
 		m_obstacle->FlyToTarget(m_obstacle->GetStartPosition(), m_randomPos, deltaTime);
-		std::cout << m_obstacle->GetCurrentPosition().x<<std::endl;
+		//std::cout << m_obstacle->GetCurrentPosition().x<<std::endl;
 		
 	}
 
@@ -422,14 +439,15 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 
 void GSPlay::Update(float deltaTime)
 {
-	UpdateSpawn(deltaTime, 2);
+	UpdateSpawn(deltaTime, 3);
 	//m_obstacle->FlyToTarget(m_obstacleSpawner->GetSpawnPosition(),m_player->GetPlayerRandomPosCircle(100.0f), deltaTime);
 	//m_obstacleSpawner->UpdateSpawn(m_player, 1,  deltaTime, m_obstacleAnimationSprite,m_obstacleAnimationList);
 	HandleEvents(deltaTime);
 	EnemySpawn(deltaTime);
 	m_player->SetColliderPosition(m_player->GetPlayerPosition());
-	
+	m_player->UpdateWindowBoundsCollision();
 	//m_obstacleAnimationSprite->Set2DPosition(m_obstacle->GetCurrentPosition().x, m_obstacle->GetCurrentPosition().y);
+	//m_player->CheckCollision(m_obstacle->SetColliderPosition());
 	
 	//Update button list
 	for (auto it : m_listButton)

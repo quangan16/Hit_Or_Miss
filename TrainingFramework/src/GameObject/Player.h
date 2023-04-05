@@ -48,6 +48,7 @@ public:
 	STATE GetPlayerState();
 	PlayerDirection GetPlayerFaceDirection();
 
+	void UpdateWindowBoundsCollision();
 	GLfloat GetSkillCooldown();
 	GLfloat IsCooldownSkill();
 	void SetCooldownSkil(GLboolean isCooldown);
