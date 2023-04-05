@@ -35,7 +35,7 @@ void GSIntro::Resume()
 }
 
 
-void GSIntro::HandleEvents()
+void GSIntro::HandleEvents(GLfloat deltaTime)
 {
 }
 

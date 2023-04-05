@@ -15,8 +15,8 @@ public:
 
 	virtual void Pause() = 0;
 	virtual void Resume() = 0;
-
-	virtual void HandleEvents() = 0;
+	
+	virtual void HandleEvents(GLfloat deltatime) = 0;
 	virtual void HandleKeyEvents(int key, bool bIsPressed) = 0;
 	virtual void HandleTouchEvents(float x, float y, bool bIsPressed) = 0;
 	virtual void HandleMouseMoveEvents(float x, float y) = 0;
