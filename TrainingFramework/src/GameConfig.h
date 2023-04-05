@@ -83,6 +83,16 @@ public:
 #define LOGF(...)
 #endif
 
+//Define player's initial stats
+#define MAX_HEALTH 3
+#define INIT_SPEED 300.f
+#define INIT_STATE IDLE
+#define INIT_POSITION Vector2(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f)
+#define INIT_ISACTIVESKILL false
+#define INIT_SKILLCOOLDOWN 10.0f
+#define INIT_SKILLTIME 3.0f
+
+
 // KEY define 
 #ifdef WIN32
 
@@ -95,5 +105,6 @@ public:
 #define KEY_MOVE_RIGHT		'D'
 #define KEY_MOVE_FORWARD	'W'
 #define KEY_MOVE_BACKWARD	'S'
+#define KEY_SPACE			VK_SPACE
 
 #endif

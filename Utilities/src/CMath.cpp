@@ -25,7 +25,6 @@ Vector2& Vector2::operator += (Vector2& vector)
 {
 	x += vector.x;
 	y += vector.y;
-
 	return *this;
 }
 

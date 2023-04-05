@@ -35,6 +35,7 @@ TrainingFramework/Debug-Nvidia
 TrainingFramework/Release-Nvidia
 Utilities/Debug-Nvidia
 Utilities/Release-Nvidia
+BIN-Nvidia/TrainingFramework.pdb
 freetype/objs
 Debug-Nvidia
 Debug-AMD
