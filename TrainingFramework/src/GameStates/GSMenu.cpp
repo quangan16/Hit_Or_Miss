@@ -11,8 +11,8 @@ GSMenu::~GSMenu()
 }
 
 //Sound
-std::string SoundMenu = "NhacMenu.wav";
-std::string SoundPlay = "Sound1.wav";
+std::string SoundMenu = "SoundMenu.wav";
+std::string SoundPlay = "SoundPlay.wav";
 int isPlayingSoundMenu = 0;
 int isPlayingSoundPlay = 0;
 int isPlayingSound = 1;
@@ -34,7 +34,7 @@ void GSMenu::Init()
 	button->Set2DPosition(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f);
 	button->SetSize(200, 200);
 	button->SetOnClick([]() {
-		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PLAY);
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PICKMOVE);
 		});
 	m_listButton.push_back(button);
 

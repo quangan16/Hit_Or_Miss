@@ -25,6 +25,7 @@ extern std::string SoundPlay;
 extern int isPlayingSoundMenu;
 extern int isPlayingSoundPlay;
 extern int isPlayingSound;
+extern int i;
 
 GSPlay::GSPlay()
 {
@@ -165,11 +166,11 @@ void GSPlay::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
 	texture = ResourceManagers::GetInstance()->GetTexture("mine.tga");
 	EnemypoolCreate(enemies1, model, shader, texture, activeStatus1, 500);
-	texture = ResourceManagers::GetInstance()->GetTexture("btn_ok.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("2.tga");
 	EnemypoolCreate(enemies2, model, shader, texture, activeStatus2, 700);
-	texture = ResourceManagers::GetInstance()->GetTexture("btn_pause.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("3.tga");
 	EnemypoolCreate(enemies3, model, shader, texture, activeStatus3, 700);
-	texture = ResourceManagers::GetInstance()->GetTexture("btn_play.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("4.tga");
 	EnemypoolCreate(enemies4, model, shader, texture, activeStatus4, 900);
 
 	//// enemy
@@ -568,13 +569,17 @@ void GSPlay::Update(float deltaTime)
 	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
-
-	m_player->MoveByClick(m_playerAnimationSprite, m_playerAnimationList, m_mouseClick, m_IsCalled, m_isMouseClicked, m_mouseDirection, deltaTime);
+	if (i == 1) {
+		m_player->MoveByClick(m_playerAnimationSprite, m_playerAnimationList, m_mouseClick, m_IsCalled, m_isMouseClicked, m_mouseDirection, deltaTime);
+	}
+	
 	//m_player->MoveByClick();
 	//UpdateSpawn(deltaTime, 3);
 	//UpdateSpawn(deltaTime, 4);
 	//UpdateSpawn(deltaTime, 5);
-	HandleEvents(deltaTime);
+	if (i == 0) {
+		HandleEvents(deltaTime);
+	}
 	EnemiesController(deltaTime);
 	/*m_obstacleSpawner->UpdateSpawn(m_obstacleAnimationSprite, m_obstacleAnimationList, m_player, 3, deltaTime, m_randomPos, &m_objectPool, m_obstacle);
 	m_obstacleSpawner2->UpdateSpawn(m_obstacleAnimationSprite2, m_obstacleAnimationList2, m_player, 4, deltaTime, m_randomPos, &m_objectPool, m_obstacle2);

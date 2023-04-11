@@ -11,7 +11,8 @@ enum class StateType
 	STATE_INTRO,
 	STATE_MENU,
 	STATE_PLAY,
-	STATE_SETTING
+	STATE_SETTING,
+	STATE_PICKMOVE
 };
 
 class GameStateMachine : public CSingleton<GameStateMachine>
