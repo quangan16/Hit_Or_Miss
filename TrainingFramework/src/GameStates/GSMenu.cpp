@@ -1,7 +1,7 @@
 #include "GSMenu.h"
 #include "Camera.h"
-GSMenu::GSMenu() : GameStateBase(StateType::STATE_MENU), 
-	m_background(nullptr), m_listButton(std::list<std::shared_ptr<GameButton>>{}), m_textGameName(nullptr)
+GSMenu::GSMenu() : GameStateBase(StateType::STATE_MENU),
+m_background(nullptr), m_listButton(std::list<std::shared_ptr<GameButton>>{}), m_textGameName(nullptr)
 {
 }
 
@@ -11,7 +11,7 @@ GSMenu::~GSMenu()
 }
 
 //Sound
-std::string SoundMenu = "Alarm01.wav";
+std::string SoundMenu = "NhacMenu.wav";
 std::string SoundPlay = "Sound1.wav";
 int isPlayingSoundMenu = 0;
 int isPlayingSoundPlay = 0;
@@ -34,7 +34,7 @@ void GSMenu::Init()
 	button->Set2DPosition(Globals::screenWidth / 2.0f, Globals::screenHeight / 2.0f);
 	button->SetSize(200, 200);
 	button->SetOnClick([]() {
-			GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PLAY);
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PLAY);
 		});
 	m_listButton.push_back(button);
 

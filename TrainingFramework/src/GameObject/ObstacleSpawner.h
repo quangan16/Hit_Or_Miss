@@ -4,13 +4,10 @@
 #include "GameConfig.h"
 #include "SkillObstacle.h"
 #include "ObjectPool.h"
-#include "Player.h"
 
 class ObstacleSpawner
 {
-	
 private:
-	
 	GLfloat m_intervalTime;
 	
 	Vector2 m_spawnPosition;

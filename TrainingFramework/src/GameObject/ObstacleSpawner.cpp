@@ -79,13 +79,13 @@ void ObstacleSpawner::ShootSkill()
 
 void ObstacleSpawner::SetSpawnPosition(Vector2 spawnPosition)
 {
-	this->m_spawnPosition.x = spawnPosition.x;
-	this->m_spawnPosition.y = spawnPosition.y;
+    this->m_spawnPosition.x = spawnPosition.x;
+    this->m_spawnPosition.y = spawnPosition.y;
 }
 
 Vector2 ObstacleSpawner::GetSpawnPosition()
 {
-	return m_spawnPosition;
+    return m_spawnPosition;
 }
 
 

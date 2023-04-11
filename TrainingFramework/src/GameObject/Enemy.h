@@ -1,13 +1,14 @@
 #pragma once
-#include "BoxCollider2D.h"
 #include "Sprite2D.h"
+#include "BoxCollider2D.h"
 class Enemy : public Sprite2D, public BoxCollider2D
 {
 protected:
+	std::string m_enemyType;
 	GLfloat m_enemySpeed;
 	GLfloat m_enemyDirection;
 public:
-	Enemy() : Sprite2D(), BoxCollider2D(), m_enemySpeed(0), m_enemyDirection(0) {}
+	/*Enemy() : Sprite2D(), BoxCollider2D(), m_enemySpeed(0), m_enemyDirection(0) {}*/
 	Enemy(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture);
 
 	//~Enemy();
