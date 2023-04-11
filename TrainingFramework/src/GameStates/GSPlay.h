@@ -45,6 +45,8 @@ public:
 	bool m_isMouseClicked;
 	int		m_KeyPress;
 	bool	m_IsCalled;
+	bool m_playerHit;
+	GLfloat m_hitAnimationDuration;
 private:
 	Vector2 m_randomPos;
 	GLfloat m_counter;

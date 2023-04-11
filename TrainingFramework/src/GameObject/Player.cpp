@@ -212,7 +212,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 
 		}
 
-		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 8, 1, 0, 0.07f);
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 8, 1, 0, 0.05f);
 		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
 		m_animationSprite->SetSize(120, 120);
 		m_listAnimation.clear();
@@ -270,25 +270,29 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		break;
 	}
 	case HIT: {
-		if (this->GetPlayerFaceDirection() == DOWN)
+		if (this->m_playerCurrentDirection == DOWN)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownHurt.tga");
 		}
-		else if (this->GetPlayerFaceDirection() == LEFT)
+		else if (this->m_playerCurrentDirection == LEFT)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftHurt.tga");
+
 		}
-		else if (this->GetPlayerFaceDirection() == RIGHT)
+		else if (this->m_playerCurrentDirection == RIGHT)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightHurt.tga");
+
 		}
-		else if (this->GetPlayerFaceDirection() == UP)
+		else if (this->m_playerCurrentDirection == UP)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpHurt.tga");
+
 		}
-		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		//m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
-		//m_animationSprite->SetSize(120, -100);
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 4, 1, 0, 0.05f);
+		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120, -100);
 		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
 		break;

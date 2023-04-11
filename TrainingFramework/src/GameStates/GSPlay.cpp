@@ -28,6 +28,8 @@ extern int isPlayingSound;
 
 GSPlay::GSPlay()
 {
+	m_hitAnimationDuration = 2.0f;
+	m_playerHit = false;
 	m_isMouseClicked = false;
 	m_slowTimer = 0;
 	m_stunTimer = 0;
@@ -146,13 +148,15 @@ void GSPlay::Init()
 	//	GameStateMachine::GetInstance()->ChangeState(StateType::STATE_MENU);
 	//	});
 	////m_listButton.push_back(button);
-
+	m_player->SetPlayerFaceDirection(DOWN);
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga");
 	m_playerAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
+
 	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	m_playerAnimationSprite->SetSize(100, 100);
+	m_playerAnimationList.clear();
 	m_playerAnimationList.push_back(m_playerAnimationSprite);
 	m_KeyPress = 0;
 
@@ -556,6 +560,7 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
+	
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
@@ -644,11 +649,23 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies1[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies1[i]->GetEnemyPosition(), 50, 50))
 			{
+				m_hitAnimationDuration = 2.0f;
+			
+				if(m_hitAnimationDuration>0.f)
+				{
+					m_playerHit = true;
+					m_player->SetPlayerState(HIT);
+				}
+			
+				m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 				activeStatus1[i] = false;
 				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 1);
 			}
 		}
 	}
+	
+	m_hitAnimationDuration -= deltaTime;
+	std::cout << m_playerHit<<std::endl;
 	for (int i = 0; i < enemies2.size(); i++) {
 		if (activeStatus2[i]) {
 			enemies2[i]->SetColliderPosition(enemies2[i]->GetEnemyPosition());
