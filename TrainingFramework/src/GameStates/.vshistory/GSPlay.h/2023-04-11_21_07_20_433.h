@@ -1,7 +1,6 @@
 #pragma once
 #include "Enemy.h"
 #include "GameStateBase.h"
-#include "ObjectPool.h"
 #include "Player.h"
 #include "SkillObstacle.h"
 
@@ -46,8 +45,6 @@ public:
 	int		m_KeyPress;
 	bool	m_IsCalled;
 private:
-	Vector2 m_randomPos;
-	GLfloat m_counter;
 	std::shared_ptr<SpriteAnimation>	m_playerAnimationSprite;
 	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite;
 	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite2;
@@ -60,14 +57,9 @@ private:
 	std::shared_ptr<SkillObstacle> m_obstacle2;
 	std::shared_ptr<SkillObstacle> m_obstacle3;
 	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner;
-	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner2;
-	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner3;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;
-	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList2;
-	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList3;
-	std::list<std::shared_ptr<SpriteAnimation>>	m_mouseClickAnimationList;
 
 	std::shared_ptr<Enemy> m_enemy;
 	std::vector<std::shared_ptr<Enemy>> enemies1;
@@ -78,7 +70,7 @@ private:
 	std::vector<bool> activeStatus2;
 	std::vector<bool> activeStatus3;
 	std::vector<bool> activeStatus4;
-	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
+
 	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
 	GLfloat m_passedCooldownTime;
 	std::shared_ptr<Sprite2D> m_skillDisplay;

@@ -5,14 +5,14 @@
 
 
 
-SkillObstacle::SkillObstacle(Vector2 startPosition, GLfloat speed, Effect effect)
+SkillObstacle::SkillObstacle(Vector2 startPosition, Vector2 targetPosition, GLfloat speed, Effect effect)
 {
 
 	this->m_obstacleStartPosition = startPosition;
 	this->m_obstacleCurrentPosition = startPosition;
 	this->m_obstacleSpeed = speed;
 	this->m_obstacleEffect = effect;
-	
+	this->m_obstacleTargetPosition = targetPosition;
 }
 
 

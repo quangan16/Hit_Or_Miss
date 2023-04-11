@@ -38,7 +38,7 @@ void ObstacleSpawner::UpdateSpawn(std::shared_ptr<SpriteAnimation> &obstacleAnim
 
 	if (m_counter >= intervalTime)
 	{
-		//randomPos = player->GetPlayerRandomPosCircle(150.0f);
+		randomPos = player->GetPlayerRandomPosCircle(150.0f);
 
 		this->SetSpawnPosition(Vector2(x, y));
 		obstacle = (*objectPool)->acquireObject();
@@ -62,7 +62,7 @@ void ObstacleSpawner::UpdateSpawn(std::shared_ptr<SpriteAnimation> &obstacleAnim
 	}
 	else {
 		obstacle->SetObstacleRotation(obstacleAnimationSprite, obstacle->GetStartPosition(), randomPos);
-		obstacle->FlyToPlayer(obstacle->GetStartPosition(), randomPos, deltaTime);
+		obstacle->FlyToTarget(obstacle->GetStartPosition(), randomPos, deltaTime);
 		//std::cout << randomPos.x << " " << randomPos.x << std::endl;
 		obstacleAnimationSprite->Set2DPosition(obstacle->GetCurrentPosition().x, obstacle->GetCurrentPosition().y);
 

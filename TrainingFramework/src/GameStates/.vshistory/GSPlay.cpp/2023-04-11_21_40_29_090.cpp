@@ -54,14 +54,10 @@ void GSPlay::Init()
 	objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
 	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE, INIT_ISACTIVESKILL, INIT_SKILLCOOLDOWN, INIT_SKILLTIME);
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
-	m_obstacleSpawner2 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.2f));
-	m_obstacleSpawner3 = std::make_shared<ObstacleSpawner>(Vector2(0.1f, 0.4f));
-	m_obstacle = std::make_shared<SkillObstacle>();
+	m_obstacleSpawner2 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
+	m_obstacleSpawner3 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
+	m_obstacle = std::make_shared<SkillObstacle>(Vector2(1000, 0), 400.0f, NORMAL);
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
-	m_obstacle2 = std::make_shared<SkillObstacle>();
-	m_obstacle2->HandleObstacleAnimation(m_obstacleAnimationSprite2, m_obstacleAnimationList2);
-	m_obstacle3 = std::make_shared<SkillObstacle>();
-	m_obstacle3->HandleObstacleAnimation(m_obstacleAnimationSprite3, m_obstacleAnimationList3);
 
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("map.tga");
@@ -188,18 +184,7 @@ void GSPlay::Init()
 		isPlayingSoundPlay = 1;
 	}
 
-	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	texture = ResourceManagers::GetInstance()->GetTexture("Effects\\Rarity Effects\\Magic effect.tga");
-	m_obstacleAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
-	m_obstacleAnimationSprite2 = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
-	m_obstacleAnimationSprite->Set2DPosition(500, 500);
-	m_obstacleAnimationSprite2->Set2DPosition(200, 200);
-	m_obstacleAnimationSprite->SetSize(100, 100);
-	m_obstacleAnimationSprite2->SetSize(100, 100);
-	m_obstacleAnimationList.clear();
-	m_obstacleAnimationList.push_back(m_obstacleAnimationSprite);
-	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);
+
 
 }
 

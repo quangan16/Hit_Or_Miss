@@ -1,7 +1,6 @@
 #pragma once
 #include "Enemy.h"
 #include "GameStateBase.h"
-#include "ObjectPool.h"
 #include "Player.h"
 #include "SkillObstacle.h"
 
@@ -78,7 +77,7 @@ private:
 	std::vector<bool> activeStatus2;
 	std::vector<bool> activeStatus3;
 	std::vector<bool> activeStatus4;
-	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
+
 	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
 	GLfloat m_passedCooldownTime;
 	std::shared_ptr<Sprite2D> m_skillDisplay;

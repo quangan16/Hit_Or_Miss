@@ -3,7 +3,9 @@
 #include "esUtil.h"
 #include "SpriteAnimation.h"
 
-
+SkillObstacle::SkillObstacle()
+{
+}
 
 SkillObstacle::SkillObstacle(Vector2 startPosition, GLfloat speed, Effect effect)
 {
@@ -12,7 +14,7 @@ SkillObstacle::SkillObstacle(Vector2 startPosition, GLfloat speed, Effect effect
 	this->m_obstacleCurrentPosition = startPosition;
 	this->m_obstacleSpeed = speed;
 	this->m_obstacleEffect = effect;
-	
+	this->m_obstacleTargetPosition = targetPosition;
 }
 
 
@@ -25,9 +27,9 @@ void SkillObstacle::SetTargetDirection(Vector2 startPos, Vector2 target)
 }
 
 
-void SkillObstacle::SetObstacleRotation(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2& startPos, Vector2& target)
+void SkillObstacle::SetObstacleRotation(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2 &startPos, Vector2 &target)
 {
-
+	
 	m_animationSprite->SetRotation(Vector3(0.f, 0.f, atan2(m_obstacleDirection.y, m_obstacleDirection.x) - M_PI / 2));
 }
 

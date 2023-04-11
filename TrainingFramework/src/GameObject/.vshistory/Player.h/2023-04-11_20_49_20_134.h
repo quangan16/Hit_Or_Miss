@@ -51,7 +51,7 @@ public:
 	STATE GetPlayerState() const;
 	PlayerDirection GetPlayerFaceDirection();
 	Vector2 GetPlayerMouseClickDestination();
-	void UpdateWindowBoundsCollision();
+
 	void MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation, Vector2 mouseClick, bool& isCalled, bool isMouseClicked, Vector2 mouseDirection, GLfloat deltaTime);
 
 	GLfloat GetSkillCooldown();

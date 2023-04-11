@@ -5,8 +5,6 @@
 #include "SkillObstacle.h"
 #include "ObjectPool.h"
 
-class Player;
-
 class ObstacleSpawner
 {
 private:

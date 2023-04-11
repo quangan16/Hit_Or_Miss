@@ -416,7 +416,7 @@ void Player::UpdateWindowBoundsCollision()
 		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y - m_height / 2));
 	}
 	else if (this->GetColliderPosition().y - this->m_height / 2 <= 0.f) {
-		this->SetPlayerPosition(Vector2(	this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height / 2));
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height / 2));
 	}
 }
 

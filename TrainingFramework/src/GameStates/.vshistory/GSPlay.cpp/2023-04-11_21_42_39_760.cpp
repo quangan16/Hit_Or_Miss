@@ -188,18 +188,7 @@ void GSPlay::Init()
 		isPlayingSoundPlay = 1;
 	}
 
-	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	texture = ResourceManagers::GetInstance()->GetTexture("Effects\\Rarity Effects\\Magic effect.tga");
-	m_obstacleAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
-	m_obstacleAnimationSprite2 = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
-	m_obstacleAnimationSprite->Set2DPosition(500, 500);
-	m_obstacleAnimationSprite2->Set2DPosition(200, 200);
-	m_obstacleAnimationSprite->SetSize(100, 100);
-	m_obstacleAnimationSprite2->SetSize(100, 100);
-	m_obstacleAnimationList.clear();
-	m_obstacleAnimationList.push_back(m_obstacleAnimationSprite);
-	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);
+
 
 }
 

@@ -3,7 +3,9 @@
 #include "esUtil.h"
 #include "SpriteAnimation.h"
 
-
+SkillObstacle::SkillObstacle()
+{
+}
 
 SkillObstacle::SkillObstacle(Vector2 startPosition, GLfloat speed, Effect effect)
 {
