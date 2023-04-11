@@ -234,7 +234,7 @@ void GSPlay::EnemySpawn(std::vector<std::shared_ptr<Enemy>>& enemies, std::vecto
 		if (!activeStatus[i]) {
 			isActiveAll = false;
 			enemies[i]->SetRandomPosition();
-			enemies[i]->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - enemies[i]->GetEnemyPosition().y, m_player->GetPlayerPosition().x - enemies[i]->GetEnemyPosition().x));
+			enemies[i]->SetEnemyDirection((m_player->GetPlayerRandomPosCircle(50.f).y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerRandomPosCircle(50.f).x - m_enemy->GetEnemyPosition().x));
 			activeStatus[i] = true;
 			break;
 		}
@@ -245,7 +245,7 @@ void GSPlay::EnemySpawn(std::vector<std::shared_ptr<Enemy>>& enemies, std::vecto
 		auto texture = ResourceManagers::GetInstance()->GetTexture("mine.tga");
 		m_enemy = std::make_shared<Enemy>(model, shader, texture);
 		m_enemy->SetRandomPosition();
-		m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+		m_enemy->SetEnemyDirection((m_player->GetPlayerRandomPosCircle(100.f).y - m_enemy->GetEnemyPosition().y, m_player-> GetPlayerRandomPosCircle(300.f).x - m_enemy->GetEnemyPosition().x));
 		m_enemy->SetSize(100, 100);
 		enemies.push_back(m_enemy);
 		activeStatus.push_back(true);
@@ -383,13 +383,6 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 				m_passedCooldownTime = 0;
 			}
 		}
-		if (m_KeyPress & (1 << 5))//Handle event when key space was pressed
-		{
-			if (m_flashCooldownTime >= m_player->GetFlashCooldownTime()){
-				
-				m_passedCooldownTime = 0;
-			}
-		}
 		if (m_IsCalled == false)
 		{
 
@@ -444,11 +437,6 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			m_KeyPress |= 1 << 4;
 
 			break;
-		case KEY_FLASH://Key 'F' was pressed
-			m_player->FlashWithMouse(m_mouseDirection);
-			m_KeyPress |= 1 << 5;
-
-			break;
 		default:
 
 			break;
@@ -474,9 +462,6 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			break;
 		case KEY_SPACE://Key ' ' was released
 			m_KeyPress ^= 1 << 4;
-			break;
-		case KEY_FLASH://Key 'F' was released
-			m_KeyPress ^= 1 << 5;
 			break;
 		default:
 			break;
@@ -559,8 +544,7 @@ void GSPlay::Update(float deltaTime)
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
-	m_player->HandleSkillCooldown(deltaTime);
-	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
+	
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
 

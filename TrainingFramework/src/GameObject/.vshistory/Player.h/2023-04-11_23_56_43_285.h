@@ -63,6 +63,5 @@ public:
 	void SetCooldownSkil(GLboolean isCooldown);
 	void Skill(GLfloat& passedTime, GLfloat deltaTime);
 	void FlashWithMouse(Vector2 direction);
-	void HandleSkillCooldown(GLfloat);
 };
 

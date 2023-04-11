@@ -474,7 +474,7 @@ GLfloat Player::IsCooldownSkill() {
 
 GLfloat Player::GetFlashCooldownTime()
 {
-	return this->m_flashCooldown;
+	return m_flashCooldown;
 }
 
 void Player::SetFlashCooldown(GLfloat isCooldown)

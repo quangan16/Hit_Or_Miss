@@ -24,8 +24,6 @@ protected:
 	GLboolean	m_isCooldownSkill;
 	GLfloat		m_skillActiveTime;
 	GLfloat		m_skillCooldown;
-	GLfloat m_flashCooldown;
-	GLboolean m_isFlashCooldown;
 	Vector2 m_mouseDestination;
 public:
 	
@@ -59,10 +57,9 @@ public:
 	GLfloat GetSkillCooldown();
 	GLfloat IsCooldownSkill();
 	GLfloat GetFlashCooldownTime();
-	void SetFlashCooldown(GLfloat isCooldown);
+	void SetFlashCooldown(GLboolean isCooldown);
 	void SetCooldownSkil(GLboolean isCooldown);
 	void Skill(GLfloat& passedTime, GLfloat deltaTime);
-	void FlashWithMouse(Vector2 direction);
-	void HandleSkillCooldown(GLfloat);
+	void FlashWithMouse(Vector2 clickPos, bool bIsPressed, GLfloat cooldown, GLfloat m_counter);
 };
 

@@ -331,7 +331,7 @@ void GSPlay::EnemiesMovement(GLfloat deltaTime, std::vector<std::shared_ptr<Enem
 			activeStatus[i] = false;
 		}
 		else {
-			enemies[i]->MoveTowardPlayer(m_player->GetPlayerPosition(), enemies[i]->GetEnemySpeed(), enemies[i]->GetEnemyPosition(), deltaTime, enemies[i]->GetEnemyDirection());
+			enemies[i]->MoveTowardPlayer(m_player->GetPlayerRandomPosCircle(150.f)(), enemies[i]->GetEnemySpeed(), enemies[i]->GetEnemyPosition(), deltaTime, enemies[i]->GetEnemyDirection());
 		}
 	}
 }
@@ -380,13 +380,6 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 		{
 			if (m_passedCooldownTime >= m_player->GetSkillCooldown()) {
 				m_player->SetCooldownSkil(true);
-				m_passedCooldownTime = 0;
-			}
-		}
-		if (m_KeyPress & (1 << 5))//Handle event when key space was pressed
-		{
-			if (m_flashCooldownTime >= m_player->GetFlashCooldownTime()){
-				
 				m_passedCooldownTime = 0;
 			}
 		}
@@ -444,11 +437,6 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			m_KeyPress |= 1 << 4;
 
 			break;
-		case KEY_FLASH://Key 'F' was pressed
-			m_player->FlashWithMouse(m_mouseDirection);
-			m_KeyPress |= 1 << 5;
-
-			break;
 		default:
 
 			break;
@@ -474,9 +462,6 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 			break;
 		case KEY_SPACE://Key ' ' was released
 			m_KeyPress ^= 1 << 4;
-			break;
-		case KEY_FLASH://Key 'F' was released
-			m_KeyPress ^= 1 << 5;
 			break;
 		default:
 			break;
@@ -559,8 +544,7 @@ void GSPlay::Update(float deltaTime)
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
-	m_player->HandleSkillCooldown(deltaTime);
-	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
+	
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
 

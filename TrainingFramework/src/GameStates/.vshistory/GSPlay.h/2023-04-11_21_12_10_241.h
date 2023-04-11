@@ -81,7 +81,6 @@ private:
 	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
 	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
 	GLfloat m_passedCooldownTime;
-	GLfloat m_flashCooldownTime;
 	std::shared_ptr<Sprite2D> m_skillDisplay;
 
 	std::shared_ptr<GameButton> m_soundButtonPlay;

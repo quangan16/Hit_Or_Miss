@@ -24,8 +24,6 @@ protected:
 	GLboolean	m_isCooldownSkill;
 	GLfloat		m_skillActiveTime;
 	GLfloat		m_skillCooldown;
-	GLfloat m_flashCooldown;
-	GLboolean m_isFlashCooldown;
 	Vector2 m_mouseDestination;
 public:
 	
@@ -54,15 +52,11 @@ public:
 	PlayerDirection GetPlayerFaceDirection();
 	Vector2 GetPlayerMouseClickDestination();
 	void UpdateWindowBoundsCollision();
-	void MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation, Vector2 mouseClick, bool& isCalled, bool &isMouseClicked, Vector2 mouseDirection, GLfloat deltaTime);
-	Vector2 GetPlayerRandomPosCircle(GLfloat radius);
+	void MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation, Vector2 mouseClick, bool& isCalled, bool isMouseClicked, Vector2 mouseDirection, GLfloat deltaTime);
+
 	GLfloat GetSkillCooldown();
 	GLfloat IsCooldownSkill();
-	GLfloat GetFlashCooldownTime();
-	void SetFlashCooldown(GLfloat isCooldown);
 	void SetCooldownSkil(GLboolean isCooldown);
 	void Skill(GLfloat& passedTime, GLfloat deltaTime);
-	void FlashWithMouse(Vector2 direction);
-	void HandleSkillCooldown(GLfloat);
 };
 

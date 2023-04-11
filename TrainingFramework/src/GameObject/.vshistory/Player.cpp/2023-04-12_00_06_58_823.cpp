@@ -5,7 +5,6 @@ Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState,
 	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState },
 	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{ skillCooldown }, m_skillActiveTime{ skillActiveTime }
 {
-	this->m_flashCooldown = 0;
 	//this->m_playerCurrentHealth = health;
 	this->m_playerCurrentSpeed = speed;
 	this->m_playerCurrentPosition = position;
@@ -474,7 +473,7 @@ GLfloat Player::IsCooldownSkill() {
 
 GLfloat Player::GetFlashCooldownTime()
 {
-	return this->m_flashCooldown;
+	return m_flashCooldown;
 }
 
 void Player::SetFlashCooldown(GLfloat isCooldown)
@@ -486,8 +485,8 @@ void Player::FlashWithMouse(Vector2 direction)
 {
 	if (m_flashCooldown<=0.f) {
 		
-			this->Move(direction * 150.0f);
-			m_flashCooldown = 20.f;
+			this->Move(direction * this->GetPlayerSpeed());
+			m_flashCooldown = 10.f;
 		
 
 	}else

@@ -5,7 +5,6 @@ Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState,
 	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState },
 	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{ skillCooldown }, m_skillActiveTime{ skillActiveTime }
 {
-	this->m_flashCooldown = 0;
 	//this->m_playerCurrentHealth = health;
 	this->m_playerCurrentSpeed = speed;
 	this->m_playerCurrentPosition = position;
@@ -148,7 +147,19 @@ void Player::MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, st
 	
 }
 
-
+//void Player::Flash(Vector2 clickPos, bool bIsPressed)
+//{
+//	if (bIsPressed) {
+//		Vector2 direction = clickPos - this->GetPlayerPosition();
+//		direction = direction.Normalize();
+//		if (this->GetPlayerPosition().x != clickPos.x && this->GetPlayerPosition().y != clickPos.y)
+//		{
+//			this->Move(direction * this->GetPlayerSpeed());
+//
+//		}
+//
+//	}
+//}
 
 
 
@@ -409,44 +420,6 @@ void Player::UpdateWindowBoundsCollision()
 	}
 }
 
-Vector2  Player::GetPlayerRandomPosCircle(GLfloat radius)
-{
-
-	bool isGetPos = false;
-	Vector2 finalPos;
-	GLfloat rand1;
-	GLfloat rand2;
-	// Seed the random number generator with the current time
-
-	if (isGetPos == false)
-	{
-		// Generate two random numbers between 0 and 1
-		rand1 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
-		rand2 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
-		isGetPos = true;
-	}
-
-
-	// Calculate the angle and radius of the point within the circle
-	GLfloat angle = rand1 * 2 * M_PI;
-	GLfloat radius_point = sqrt(rand2) * radius;
-
-	// Convert the angle from radians to degrees if necessary
-	GLfloat angle_degrees = angle * 180 / M_PI;
-
-	// Convert polar coordinates to Cartesian coordinates
-	GLfloat x = radius_point * cos(angle);
-	GLfloat y = radius_point * sin(angle);
-
-	// Add center coordinates to get final position
-	finalPos.x = this->m_playerCurrentPosition.x + x;
-	finalPos.y = this->m_playerCurrentPosition.y + y;
-
-
-
-
-	return finalPos;
-}
 void Player::Skill(GLfloat& passedTime, GLfloat deltaTime) {
 	if (passedTime >= m_skillCooldown) {
 		m_isCooldownSkill = false;
@@ -471,35 +444,3 @@ void Player::SetCooldownSkil(GLboolean isCooldown) {
 GLfloat Player::IsCooldownSkill() {
 	return m_isCooldownSkill;
 };
-
-GLfloat Player::GetFlashCooldownTime()
-{
-	return this->m_flashCooldown;
-}
-
-void Player::SetFlashCooldown(GLfloat isCooldown)
-{
-	m_isFlashCooldown = isCooldown;
-}
-
-void Player::FlashWithMouse(Vector2 direction)
-{
-	if (m_flashCooldown<=0.f) {
-		
-			this->Move(direction * 150.0f);
-			m_flashCooldown = 20.f;
-		
-
-	}else
-	{
-		return;
-	}
-}
-
-void Player::HandleSkillCooldown(GLfloat deltaTime)
-{
-	if(this->m_flashCooldown>0.f)
-	{
-		m_flashCooldown -= deltaTime;
-	}
-}

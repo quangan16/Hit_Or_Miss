@@ -106,6 +106,5 @@ public:
 #define KEY_MOVE_FORWARD	'W'
 #define KEY_MOVE_BACKWARD	'S'
 #define KEY_SPACE			VK_SPACE
-#define KEY_FLASH			'F'
 
 #endif

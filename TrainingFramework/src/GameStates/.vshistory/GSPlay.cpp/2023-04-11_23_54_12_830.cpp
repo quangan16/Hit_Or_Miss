@@ -445,7 +445,7 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 
 			break;
 		case KEY_FLASH://Key 'F' was pressed
-			m_player->FlashWithMouse(m_mouseDirection);
+			m_player->FlashWithMouse(m_mouseDirection, m_player->GetFlashCooldownTime())
 			m_KeyPress |= 1 << 5;
 
 			break;
@@ -559,8 +559,7 @@ void GSPlay::Update(float deltaTime)
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
-	m_player->HandleSkillCooldown(deltaTime);
-	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
+	
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
 

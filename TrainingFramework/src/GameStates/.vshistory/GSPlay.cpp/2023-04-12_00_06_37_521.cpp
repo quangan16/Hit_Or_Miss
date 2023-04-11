@@ -560,7 +560,7 @@ void GSPlay::Update(float deltaTime)
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
 	m_player->HandleSkillCooldown(deltaTime);
-	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
+	std::cout << m_player->GetSkillCooldown();
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
 
