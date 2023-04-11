@@ -191,7 +191,7 @@ void GSPlay::Init()
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
 	texture = ResourceManagers::GetInstance()->GetTexture("Effects\\Rarity Effects\\Magic effect.tga");
-	/*m_obstacleAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
+	m_obstacleAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
 	m_obstacleAnimationSprite2 = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
 	m_obstacleAnimationSprite->Set2DPosition(500, 500);
 	m_obstacleAnimationSprite2->Set2DPosition(200, 200);
@@ -199,7 +199,7 @@ void GSPlay::Init()
 	m_obstacleAnimationSprite2->SetSize(100, 100);
 	m_obstacleAnimationList.clear();
 	m_obstacleAnimationList.push_back(m_obstacleAnimationSprite);
-	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);*/
+	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);
 
 }
 
@@ -544,7 +544,7 @@ void GSPlay::Update(float deltaTime)
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	//m_player->UpdateWindowBoundsCollision();
 	
-	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
+	std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;
 
 
 	m_player->MoveByClick(m_playerAnimationSprite, m_playerAnimationList, m_mouseClick, m_IsCalled, m_isMouseClicked, m_mouseDirection, deltaTime);
