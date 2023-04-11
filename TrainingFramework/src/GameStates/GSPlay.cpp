@@ -29,7 +29,7 @@ extern int isPlayingSound;
 
 GSPlay::GSPlay()
 {
-
+	m_isMouseClicked = false;
 	m_KeyPress = 0;
 	m_IsCalled = false;
 	m_CurrentFaceDirectionX = 1;
@@ -52,10 +52,14 @@ void GSPlay::Init()
 	m_objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
 	m_player = std::make_shared<Player>(MAX_HEALTH, INIT_SPEED, INIT_POSITION, INIT_STATE, INIT_ISACTIVESKILL, INIT_SKILLCOOLDOWN, INIT_SKILLTIME);
 	m_obstacleSpawner = std::make_shared<ObstacleSpawner>(Vector2(0.f,0.f));
-	m_obstacleSpawner2 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
-	m_obstacleSpawner3 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.f));
-	m_obstacle = std::make_shared<SkillObstacle>(Vector2(0, 0),Vector2(1280, 720) , 400.0f, NORMAL);
+	m_obstacleSpawner2 = std::make_shared<ObstacleSpawner>(Vector2(0.f, 0.2f));
+	m_obstacleSpawner3 = std::make_shared<ObstacleSpawner>(Vector2(0.1f, 0.4f));
+	m_obstacle = std::make_shared<SkillObstacle>();
 	m_obstacle->HandleObstacleAnimation(m_obstacleAnimationSprite, m_obstacleAnimationList);
+	m_obstacle2 = std::make_shared<SkillObstacle>();
+	m_obstacle2->HandleObstacleAnimation(m_obstacleAnimationSprite2, m_obstacleAnimationList2);
+	m_obstacle3 = std::make_shared<SkillObstacle>();
+	m_obstacle3->HandleObstacleAnimation(m_obstacleAnimationSprite3, m_obstacleAnimationList3);
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("desertoasis.tga");
 
@@ -113,12 +117,26 @@ void GSPlay::Init()
 
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
-	texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownIdle.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga");
 	m_playerAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
 	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	m_playerAnimationSprite->SetSize(100 , 100 );
 	m_playerAnimationList.push_back(m_playerAnimationSprite);
 	m_KeyPress = 0;
+
+	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+	shader = ResourceManagers::GetInstance()->GetShader("Animation");
+	texture = ResourceManagers::GetInstance()->GetTexture("Effects\\Rarity Effects\\Magic effect.tga");
+	m_obstacleAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
+	m_obstacleAnimationSprite2 = std::make_shared<SpriteAnimation>(model, shader, texture, 9, 1, 0, 0.05f);
+	m_obstacleAnimationSprite->Set2DPosition(500,500);
+	m_obstacleAnimationSprite2->Set2DPosition(200,200);
+	m_obstacleAnimationSprite->SetSize(100, 100);
+	m_obstacleAnimationSprite2->SetSize(100, 100);
+	m_obstacleAnimationList.clear();
+	m_obstacleAnimationList.push_back(m_obstacleAnimationSprite);
+	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);
+
 
 	// enemy
 	/*model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
@@ -163,53 +181,57 @@ void GSPlay::Resume()
 }
 
 //Tao enemy
-void GSPlay::EnemySpawn(GLfloat deltaTime) {
-	
-	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
-	spawnTime += deltaTime;
+//void GSPlay::EnemySpawn(GLfloat deltaTime) {
+//	
+//	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+//	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
+//	auto texture = ResourceManagers::GetInstance()->GetTexture("arrow-up.tga");
+//	spawnTime += deltaTime;
+//
+//	if (spawnTime > 1) {
+//		
+//
+//		bool isActiveAll = true;
+//		for (int i = 0; i < enemies.size(); i++) {
+//			if (!activeStatus[i]) {
+//				isActiveAll = false;
+//				enemies[i]->SetRandomPosition();
+//				enemies[i]->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - enemies[i]->GetEnemyPosition().y, m_player->GetPlayerPosition().x - enemies[i]->GetEnemyPosition().x));
+//				activeStatus[i] = true;
+//				break;
+//			}
+//		}
+//		if (isActiveAll) {
+//			m_enemy = std::make_shared<Enemy>(model, shader, texture);
+//			m_enemy->SetRandomPosition();
+//			m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
+//			m_enemy->SetSize(100, 100);
+//			enemies.push_back(m_enemy);
+//			activeStatus.push_back(true);
+//		}
+//
+//		spawnTime = 0;
+//	}
+//	for (int i = 0; i < enemies.size(); i++) {
+//
+//		if (enemies[i]->GetEnemyPosition().x < 0 || enemies[i]->GetEnemyPosition().x >(float)Globals::screenWidth || enemies[i]->GetEnemyPosition().y < 0 || enemies[i]->GetEnemyPosition().y >(float)Globals::screenHeight) {
+//			activeStatus[i] = false;
+//		}
+//		else {
+//			enemies[i]->MoveTowardPlayer(m_player->GetPlayerPosition(), enemies[i]->GetEnemySpeed(), enemies[i]->GetEnemyPosition(), deltaTime, enemies[i]->GetEnemyDirection());
+//		}
+//	}
+//}
 
-	if (spawnTime > 1) {
-		
 
-		bool isActiveAll = true;
-		for (int i = 0; i < enemies.size(); i++) {
-			if (!activeStatus[i]) {
-				isActiveAll = false;
-				enemies[i]->SetRandomPosition();
-				enemies[i]->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - enemies[i]->GetEnemyPosition().y, m_player->GetPlayerPosition().x - enemies[i]->GetEnemyPosition().x));
-				activeStatus[i] = true;
-				break;
-			}
-		}
-		if (isActiveAll) {
-			m_enemy = std::make_shared<Enemy>(model, shader, texture);
-			m_enemy->SetRandomPosition();
-			m_enemy->SetEnemyDirection(atan2(m_player->GetPlayerPosition().y - m_enemy->GetEnemyPosition().y, m_player->GetPlayerPosition().x - m_enemy->GetEnemyPosition().x));
-			m_enemy->SetSize(100, 100);
-			enemies.push_back(m_enemy);
-			activeStatus.push_back(true);
-		}
-
-		spawnTime = 0;
-	}
-	for (int i = 0; i < enemies.size(); i++) {
-
-		if (enemies[i]->GetEnemyPosition().x < 0 || enemies[i]->GetEnemyPosition().x >(float)Globals::screenWidth || enemies[i]->GetEnemyPosition().y < 0 || enemies[i]->GetEnemyPosition().y >(float)Globals::screenHeight) {
-			activeStatus[i] = false;
-		}
-		else {
-			enemies[i]->MoveTowardPlayer(m_player->GetPlayerPosition(), enemies[i]->GetEnemySpeed(), enemies[i]->GetEnemyPosition(), deltaTime, enemies[i]->GetEnemyDirection());
-		}
-	}
-}
 
 void GSPlay::HandleEvents(GLfloat deltatime)	
 {
-	m_obstacleAnimationSprite->Set2DPosition(m_obstacle->GetCurrentPosition().x, m_obstacle->GetCurrentPosition().y);
+	
 	m_playerAnimationSprite->Set2DPosition(m_player->GetPlayerPosition().x, m_player->GetPlayerPosition().y);
 	m_playerAnimationSprite->SetSize(100, 100);
+	
+	
 	if(m_KeyPress)
 	{
 		
@@ -259,6 +281,7 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 			m_IsCalled = true;
 		}
+		
 		
 	}else
 	{
@@ -335,13 +358,17 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 		default:
 			break;
 		}
+		
+			
 		if (m_IsCalled == true)
 		{
-			
+
 			m_player->SetPlayerState(IDLE);
 			m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 			m_IsCalled = false;
 		}
+			
+		
 	}
 
 }
@@ -349,6 +376,29 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 //Handle button event
 void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 {
+	if(bIsPressed)
+	{
+		m_mouseClick = Vector2(x, y);
+		m_mouseDirection = m_mouseClick - m_player->GetPlayerPosition();
+		m_isMouseClicked = true;
+		m_IsCalled = false;
+		m_mouseDirection = m_mouseDirection.Normalize();
+		auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
+		auto shader = ResourceManagers::GetInstance()->GetShader("Animation");
+		auto texture = ResourceManagers::GetInstance()->GetTexture("clickMouseEffect.tga");
+		m_mouseClickAnimationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 4, 1, 0, 0.04f);
+		m_mouseClickAnimationSprite->Set2DPosition(x, y);
+		m_mouseClickAnimationSprite->SetSize(100, 100);
+		
+		m_mouseClickAnimationList.push_back(m_mouseClickAnimationSprite);
+		
+		
+	}else
+	{
+		m_mouseClickAnimationList.clear();
+	}
+
+
 	for (auto button : m_listButton)
 	{
 		if (button->HandleTouchEvents(x, y, bIsPressed))
@@ -356,6 +406,12 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 			break;
 		}
 	}
+
+	
+		//m_player->MoveByClick(Vector2(x, y), bIsPressed);
+	
+
+	
 
 	if (isPlayingSound == 1)
 	{
@@ -380,7 +436,7 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 	
 
 	// Generate random position off-screen
-	int x, y;
+	GLfloat x = 0.f, y= 0.f;
 	int side = std::rand() % 4; // choose a random side of the offscreen area
 	switch (side)
 	{
@@ -403,10 +459,9 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 	}
 
 	// Print the random position
-	std::cout << "Random position: (" << x << ", " << y << ")" << std::endl;
 
 
-	if (m_counter >= intervalTime)
+	if (m_counter > intervalTime)
 	{
 		m_randomPos = m_player->GetPlayerRandomPosCircle(100.0f);
 
@@ -439,15 +494,30 @@ void GSPlay:: UpdateSpawn(GLfloat deltaTime, GLfloat intervalTime) {
 
 void GSPlay::Update(float deltaTime)
 {
-	UpdateSpawn(deltaTime, 3);
+	std::cout<<m_obstacleAnimationSprite->Get2DPosition().y<<" "<< m_obstacleAnimationSprite2->Get2DPosition().y<<std::endl;
+	
+		
+	m_player->MoveByClick(m_playerAnimationSprite, m_playerAnimationList, m_mouseClick, m_IsCalled, m_isMouseClicked, m_mouseDirection, deltaTime);
+	//m_player->MoveByClick();
+	//UpdateSpawn(deltaTime, 3);
+	//UpdateSpawn(deltaTime, 4);
+	//UpdateSpawn(deltaTime, 5);
 	//m_obstacle->FlyToTarget(m_obstacleSpawner->GetSpawnPosition(),m_player->GetPlayerRandomPosCircle(100.0f), deltaTime);
-	//m_obstacleSpawner->UpdateSpawn(m_player, 1,  deltaTime, m_obstacleAnimationSprite,m_obstacleAnimationList);
-	HandleEvents(deltaTime);
-	EnemySpawn(deltaTime);
+
+	m_obstacleSpawner->UpdateSpawn(m_obstacleAnimationSprite, m_obstacleAnimationList, m_player, 3, deltaTime, m_randomPos, &m_objectPool, m_obstacle);
+	m_obstacleSpawner2->UpdateSpawn(m_obstacleAnimationSprite2, m_obstacleAnimationList2, m_player, 4, deltaTime, m_randomPos, &m_objectPool, m_obstacle2);
+	m_obstacleSpawner3->UpdateSpawn(m_obstacleAnimationSprite3, m_obstacleAnimationList3,  m_player, 5 , deltaTime, m_randomPos, &m_objectPool, m_obstacle3);
+	//std::cout<<m_obstacleSpawner->m_counter<<" "<< m_obstacleSpawner2->m_counter<<" "<< m_obstacleSpawner3->m_counter<<std::endl;
+	//HandleEvents(deltaTime);
+	//HandleEvents2(deltaTime, GSPlay::m_isMouseClicked);
+	//EnemySpawn(deltaTime);
 	m_player->SetColliderPosition(m_player->GetPlayerPosition());
 	m_player->UpdateWindowBoundsCollision();
-	//m_obstacleAnimationSprite->Set2DPosition(m_obstacle->GetCurrentPosition().x, m_obstacle->GetCurrentPosition().y);
+	
 	//m_player->CheckCollision(m_obstacle->SetColliderPosition());
+
+		
+
 	
 	//Update button list
 	for (auto it : m_listButton)
@@ -462,6 +532,21 @@ void GSPlay::Update(float deltaTime)
 	}
 
 	for (auto it : m_obstacleAnimationList)
+	{
+		it->Update(deltaTime);
+	}
+
+	for (auto it : m_obstacleAnimationList2)
+	{
+		it->Update(deltaTime);
+	}
+
+	for (auto it : m_obstacleAnimationList3)
+	{
+		it->Update(deltaTime);
+	}
+
+	for (auto it : m_mouseClickAnimationList)
 	{
 		it->Update(deltaTime);
 	}
@@ -492,6 +577,21 @@ void GSPlay::Draw()
 	}
 
 	for (auto it : m_obstacleAnimationList)
+	{
+		it->Draw();
+	}
+
+	for (auto it : m_obstacleAnimationList2)
+	{
+		it->Draw();
+	}
+
+	for (auto it : m_obstacleAnimationList3)
+	{
+		it->Draw();
+	}
+
+	for (auto it : m_mouseClickAnimationList)
 	{
 		it->Draw();
 	}

@@ -36,23 +36,37 @@ public:
 
 	int		m_CurrentFaceDirectionX;
 	int		m_CurrentFaceDirectionY;
+	Vector2 m_mouseClick;
+	Vector2 m_mouseDirection;
+	bool m_isMouseClicked;
 	int		m_KeyPress;
 	bool	m_IsCalled;
 private:
 	Vector2 m_randomPos;
 	GLfloat m_counter;
+	
+
 	std::shared_ptr<SpriteAnimation>	m_playerAnimationSprite;
 	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite;
+	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite2;
+	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite3;
+	std::shared_ptr<SpriteAnimation>	m_mouseClickAnimationSprite;
 	std::shared_ptr<Sprite2D>	m_background;
 	std::shared_ptr<Text>		m_score;
 	std::shared_ptr<Player>		m_player;
 	std::shared_ptr<SkillObstacle> m_obstacle;
+	std::shared_ptr<SkillObstacle> m_obstacle2;
+	std::shared_ptr<SkillObstacle> m_obstacle3;
 	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner;
 	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner2;
 	std::shared_ptr<ObstacleSpawner>	m_obstacleSpawner3;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_playerAnimationList;
 	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList;
+	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList2;
+	std::list<std::shared_ptr<SpriteAnimation>>	m_obstacleAnimationList3;
+	std::list<std::shared_ptr<SpriteAnimation>>	m_mouseClickAnimationList;
+
 	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
 	std::shared_ptr<Enemy> m_enemy;
 	std::vector<std::shared_ptr<Enemy>> enemies;

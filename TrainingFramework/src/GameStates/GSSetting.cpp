@@ -84,7 +84,7 @@ void GSSetting::Init()
 
 	m_KeyPress = 0;
 
-	std::cout << isPlayingSound << " " << isPlayingSoundMenu << " " << isPlayingSoundPlay;
+	//std::cout << isPlayingSound << " " << isPlayingSoundMenu << " " << isPlayingSoundPlay;
 }
 
 void GSSetting::Exit()
@@ -104,6 +104,8 @@ void GSSetting::Resume()
 void GSSetting::HandleEvents(GLfloat deltaTime)
 {
 }
+
+
 
 void GSSetting::HandleKeyEvents(int key, bool bIsPressed)
 {

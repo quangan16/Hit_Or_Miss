@@ -63,11 +63,11 @@ GLfloat Player::GetPlayerSpeed() {
 	return m_playerCurrentSpeed;
 };
 
-Vector2 Player::GetPlayerPosition() {
+Vector2 Player::GetPlayerPosition() const{
 	return m_playerCurrentPosition;
 };
 
-PlayerState Player::GetPlayerState() {
+PlayerState Player::GetPlayerState() const{
 	return this->m_playerCurrentState;
 };
 
@@ -75,6 +75,92 @@ PlayerDirection Player::GetPlayerFaceDirection()
 {
 	return m_playerCurrentDirection;
 }
+
+Vector2 Player::GetPlayerMouseClickDestination()
+{
+	return m_mouseDestination;
+}
+
+void Player::SetPlayerMouseClickDestination(Vector2 destination)
+{
+	m_mouseDestination = destination;
+	//std::cout << m_mouseDestination.x <<" "<< m_mouseDestination.x;
+}
+
+
+
+void Player::MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation, Vector2 mouseClick, bool &isCalled, bool isMouseClicked, Vector2 mouseDirection, GLfloat deltaTime)
+{
+	m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+	m_animationSprite->SetSize(120, 120);
+	GLfloat directionX = mouseClick.x - this->GetPlayerPosition().x;
+	GLfloat directionY = mouseClick.y - this->GetPlayerPosition().y;
+	GLfloat distance = sqrt(directionX * directionX + directionY * directionY);
+	GLfloat angleDirection = (atan2(directionY, directionX) - M_PI / 2);
+	//std::cout <<distance<< std::endl;
+	// check if player has reached destination
+	if (distance <= 3.0f) { // choose your own threshold here
+
+		if (isCalled == true)
+		{
+			this->SetPlayerState(IDLE);
+			this->HandleAnimationState(m_animationSprite, m_listAnimation);
+			isCalled = false;
+		}
+		return; // stop moving player
+	}
+	else if (isMouseClicked)
+	{
+		if (angleDirection <= M_PI / 4 && angleDirection >= -M_PI / 4)
+		{
+			this->SetPlayerState(RUNNING);
+			this->SetPlayerFaceDirection(DOWN);
+		}
+		if (angleDirection >= -5 * M_PI / 4 && angleDirection <= -3 * M_PI / 4)
+		{
+			this->SetPlayerState(RUNNING);
+			this->SetPlayerFaceDirection(UP);
+		}
+		if (angleDirection <= -M_PI / 4 && angleDirection >= -3 * M_PI / 4)
+		{
+			this->SetPlayerState(RUNNING);
+			this->SetPlayerFaceDirection(RIGHT);
+		}
+		if (angleDirection >= M_PI / 4 && angleDirection <= M_PI / 2 || angleDirection <= -5 * M_PI / 4 && angleDirection >= -3 * M_PI / 2)
+		{
+			this->SetPlayerState(RUNNING);
+			this->SetPlayerFaceDirection(LEFT);
+		}
+		if (isCalled == false)
+		{
+			std::cout << ((atan2(directionY, directionX) - M_PI / 2)) << std::endl;
+
+			this->HandleAnimationState(m_animationSprite, m_listAnimation);
+			isCalled = true;
+		}
+
+		this->Move(mouseDirection * this->GetPlayerSpeed() * deltaTime);
+
+
+	}
+
+	
+}
+
+//void Player::Flash(Vector2 clickPos, bool bIsPressed)
+//{
+//	if (bIsPressed) {
+//		Vector2 direction = clickPos - this->GetPlayerPosition();
+//		direction = direction.Normalize();
+//		if (this->GetPlayerPosition().x != clickPos.x && this->GetPlayerPosition().y != clickPos.y)
+//		{
+//			this->Move(direction * this->GetPlayerSpeed());
+//
+//		}
+//
+//	}
+//}
+
 
 
 void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>	&m_listAnimation)
@@ -108,7 +194,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 			}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
 		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
-		m_animationSprite->SetSize(100, 100);
+		m_animationSprite->SetSize(120, 120);
 		m_listAnimation.clear();
 
 		m_listAnimation.push_back(m_animationSprite);
@@ -139,7 +225,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 8, 1, 0, 0.07f);
 		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
-		m_animationSprite->SetSize(100, 100);
+		m_animationSprite->SetSize(120, 120);
 		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
 
@@ -163,7 +249,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 		}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		//m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
 		
 		m_listAnimation.push_back(m_animationSprite);
 
@@ -359,7 +445,6 @@ Vector2  Player::GetPlayerRandomPosCircle(GLfloat radius)
 
 void Player::UpdateWindowBoundsCollision()
 {
-	std::cout << this->GetPlayerPosition().y - this->m_width / 2<<std::endl;
 	if (this->GetColliderPosition().x - this->m_width / 2 <= 0.f) {
 		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x + m_width/2, this->GetPlayerPosition().y));
 	}

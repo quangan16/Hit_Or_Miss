@@ -29,7 +29,7 @@ public:
     void prepareObject(int poolSize, T obj) {
         for (int i = 0; i < poolSize; ++i) {
             availableObjects.push_back(obj);
-            std::cout << availableObjects.size();
+            //std::cout << availableObjects.size();
         }
     }
 

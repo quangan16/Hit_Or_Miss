@@ -8,7 +8,7 @@
 #include "GameConfig.h"
 
 typedef enum EFFECT { NORMAL, FREEZE, BURN, SLOW } Effect;
-class SkillObstacle :public BoxCollider2D
+class SkillObstacle
 {
 private:
 	Vector2 m_obstacleDirection;
@@ -18,7 +18,7 @@ private:
 	GLfloat m_obstacleSpeed;
 	Effect m_obstacleEffect;
 public:
-	SkillObstacle() :BoxCollider2D(INIT_POSITION, 30, 30), m_obstacleStartPosition(0.0f, 0.0f), m_obstacleCurrentPosition(0.0f, 0.0f), m_obstacleDirection(0.0f, 0.0f), m_obstacleSpeed(500.0f), m_obstacleEffect(NORMAL){};
+	SkillObstacle() : m_obstacleStartPosition(0.0f, 0.0f), m_obstacleCurrentPosition(0.0f, 0.0f), m_obstacleDirection(0.0f, 0.0f), m_obstacleSpeed(500.0f), m_obstacleEffect(NORMAL){};
 	SkillObstacle(Vector2 startPosition, Vector2 targetPosition, GLfloat speed, Effect effect);
 
 	void SetTargetDirection(Vector2 startPos, Vector2 target);
@@ -34,7 +34,7 @@ public:
 	void SetStartPosition(Vector2 startPosition);
 	void SetObstacleSpeed(GLfloat speed);
 	void SetObstacleEffect(Effect effect);
-	void SetObstacleRotation(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2 start, Vector2 target);
+	void SetObstacleRotation(std::shared_ptr<SpriteAnimation>& m_animationSprite, Vector2 &start, Vector2 &target);
 
 
 

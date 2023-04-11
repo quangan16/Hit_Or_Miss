@@ -5,52 +5,70 @@
 
 
 ObstacleSpawner::~ObstacleSpawner(){};
-ObjectPool<std::shared_ptr<SkillObstacle>>* objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
 
-void ObstacleSpawner::UpdateSpawn(std::shared_ptr<Player> player, GLfloat intervalTime, GLfloat deltaTime, std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation) {
-    m_counter += deltaTime;
-    
-    
-    // Generate random position off-screen
-    int x = rand() % Globals::screenWidth;
-    int y = rand() % Globals::screenHeight;
-    if (rand() % 2 == 0) {
-        x -= Globals::screenWidth;
-    }
-    else {
-        x += Globals::screenWidth;
-    }
-    if (rand() % 2 == 0) {
-        y -= Globals::screenHeight;
-    }
-    else {
-        y += Globals::screenHeight;
-    }
+void ObstacleSpawner::UpdateSpawn(std::shared_ptr<SpriteAnimation> &obstacleAnimationSprite, std::list<std::shared_ptr<SpriteAnimation>> &obstacleAnimationList, std::shared_ptr<Player> &player, GLfloat intervalTime, GLfloat deltaTime, Vector2 &randomPos, ObjectPool<std::shared_ptr<SkillObstacle>>** objectPool, std::shared_ptr<SkillObstacle> &obstacle)
+{
+
+	m_counter += deltaTime;
+	// Generate random position off-screen
+	int x, y;
+	int side = std::rand() % 4; // choose a random side of the offscreen area
+	switch (side)
+	{
+	case 0: // top side
+		x = std::rand() % (Globals::screenWidth - 50) + 50;
+		y = -std::rand() % Globals::screenWidth;
+		break;
+	case 1: // right side
+		x = Globals::screenWidth + std::rand() % 50;
+		y = std::rand() % (Globals::screenHeight - 50) + 50;
+		break;
+	case 2: // bottom side
+		x = std::rand() % (Globals::screenWidth - 50) + 50;
+		y = Globals::screenHeight + std::rand() % 50;
+		break;
+	case 3: // left side
+		x = -std::rand() % 50;
+		y = std::rand() % (Globals::screenHeight - 50) + 50;
+		break;
+	}
+
+	// Print the random position
 
 
-    if (m_counter > intervalTime)
-    {
-		player->GetPlayerRandomPosCircle(300);
-        this->SetSpawnPosition(Vector2(x, y));
+	if (m_counter >= intervalTime)
+	{
+		randomPos = player->GetPlayerRandomPosCircle(150.0f);
 
-        m_obstacle = objectPool->acquireObject();
+		this->SetSpawnPosition(Vector2(x, y));
+		obstacle = (*objectPool)->acquireObject();
+		obstacle->SetObstacleSpeed(400);
+		obstacle->SetStartPosition(this->GetSpawnPosition()); 
+		obstacle->SetCurrentPosition(obstacle->GetStartPosition());
+		
+		
+		//std::cout << "new!";
+		m_counter = 0.f;
+		// Spawn enemy at generated position with chosen direction
+		(*objectPool)->getAvailableObjectsSize();
+		/* add enemy to game world */
+		
+	}
+	if (obstacle->GetCurrentPosition().x < -60.f || obstacle->GetCurrentPosition().x >(float)Globals::screenWidth + 60.f || obstacle->GetCurrentPosition().y < -60.f || obstacle->GetCurrentPosition().y >(float)Globals::screenHeight + 60.f) {
 
-        if (m_obstacle->GetCurrentPosition().x < 0 || m_obstacle->GetCurrentPosition().x >(float)Globals::screenWidth || m_obstacle->GetCurrentPosition().y < 0 || m_obstacle->GetCurrentPosition().y >(float)Globals::screenHeight) {
-            objectPool->releaseObject(m_obstacle);
-            std::cout << "Released";
-        }
-        else {
-            m_obstacle->FlyToTarget(m_obstacle->GetStartPosition(), player->GetPlayerRandomPosCircle(50.0f), deltaTime);
-            std::cout << m_obstacle->GetCurrentPosition().x;
-           
-        }
-       
-        m_counter = 0.f;
-        // Spawn enemy at generated position with chosen direction
-        
-        /* add enemy to game world */
-    }
-    
+		(*objectPool)->releaseObject(obstacle);
+		std::cout << "take back";
+
+	}
+	else {
+		obstacle->SetObstacleRotation(obstacleAnimationSprite, obstacle->GetStartPosition(), randomPos);
+		obstacle->FlyToTarget(obstacle->GetStartPosition(), randomPos, deltaTime);
+		//std::cout << randomPos.x << " " << randomPos.x << std::endl;
+		obstacleAnimationSprite->Set2DPosition(obstacle->GetCurrentPosition().x, obstacle->GetCurrentPosition().y);
+
+	}
+	
+	
 }
 void ObstacleSpawner::ShootSkill()
 {
