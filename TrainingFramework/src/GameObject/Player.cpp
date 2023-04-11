@@ -2,8 +2,8 @@
 
 
 Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState, GLboolean isCooldownSkill, GLfloat skillCooldown, GLfloat skillActiveTime)
-	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState }, 
-	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{skillCooldown}, m_skillActiveTime{skillActiveTime}
+	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState },
+	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{ skillCooldown }, m_skillActiveTime{ skillActiveTime }
 {
 	//this->m_playerCurrentHealth = health;
 	this->m_playerCurrentSpeed = speed;
@@ -16,7 +16,7 @@ Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState,
 
 Player::~Player()
 {
-	
+
 }
 
 
@@ -45,7 +45,7 @@ void Player::SetPlayerPosition(Vector2 position) {
 	m_playerCurrentPosition = position;
 };
 
-void Player::SetPlayerState(PlayerState state ) {
+void Player::SetPlayerState(PlayerState state) {
 	m_playerCurrentState = state;
 };
 
@@ -77,7 +77,7 @@ PlayerDirection Player::GetPlayerFaceDirection()
 }
 
 
-void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>	&m_listAnimation)
+void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation)
 {
 	//std::cout << this->GetPlayerState();
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
@@ -88,55 +88,55 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 	switch (this->GetPlayerState())
 	{
 	case IDLE: {
-			if(this->m_playerCurrentDirection == DOWN)
-			{
-				texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");
-				
-			}
-			if (this->m_playerCurrentDirection == LEFT)
-			{
-				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftIdle.tga");
-			}
-			else if (this->m_playerCurrentDirection == RIGHT)
-			{
-				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightIdle.tga");
-				
-			}
-			else if (this->m_playerCurrentDirection == UP)
-			{
-				 texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpIdle.tga");
-			}
+		if (this->m_playerCurrentDirection == DOWN)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Down/WarriorDownIdle.tga ");
+
+		}
+		if (this->m_playerCurrentDirection == LEFT)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftIdle.tga");
+		}
+		else if (this->m_playerCurrentDirection == RIGHT)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightIdle.tga");
+
+		}
+		else if (this->m_playerCurrentDirection == UP)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpIdle.tga");
+		}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.1f);
 		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
 		m_animationSprite->SetSize(100, 100);
 		m_listAnimation.clear();
 
 		m_listAnimation.push_back(m_animationSprite);
-		
+
 		break;
 	}
 	case RUNNING: {
 		if (this->m_playerCurrentDirection == DOWN)
 		{
-			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownWalk.tga");
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownWalk.tga");
 		}
 		else if (this->m_playerCurrentDirection == LEFT)
 		{
-			
-			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftWalk.tga");
-			
+
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftWalk.tga");
+
 		}
 		else if (this->m_playerCurrentDirection == RIGHT)
 		{
-			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightWalk.tga");
-			
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right//WarriorRightWalk.tga");
+
 		}
 		else if (this->m_playerCurrentDirection == UP)
 		{
-			 texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpWalk.tga");
-			
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpWalk.tga");
+
 		}
-		
+
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 8, 1, 0, 0.07f);
 		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
 		m_animationSprite->SetSize(100, 100);
@@ -164,7 +164,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 		//m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
-		
+
 		m_listAnimation.push_back(m_animationSprite);
 
 		break;
@@ -285,7 +285,7 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 		}
 		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		
+
 		m_listAnimation.push_back(m_animationSprite);
 		break;
 	}
@@ -318,69 +318,30 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 
 }
 
-Vector2  Player::GetPlayerRandomPosCircle(GLfloat radius)
-{
-
-	bool isGetPos = false;
-		Vector2 finalPos;
-		GLfloat rand1;
-		GLfloat rand2;
-		// Seed the random number generator with the current time
-		
-		if(isGetPos == false)
-		{
-			// Generate two random numbers between 0 and 1
-			rand1 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
-			rand2 = static_cast<GLfloat>(std::rand()) / RAND_MAX;
-			isGetPos = true;
-		}
-		
-
-		// Calculate the angle and radius of the point within the circle
-		GLfloat angle = rand1 * 2 * M_PI;
-		GLfloat radius_point = sqrt(rand2) * radius;
-
-		// Convert the angle from radians to degrees if necessary
-		GLfloat angle_degrees = angle * 180 / M_PI;
-
-		// Convert polar coordinates to Cartesian coordinates
-		GLfloat x = radius_point * cos(angle);
-		GLfloat y = radius_point * sin(angle);
-
-		// Add center coordinates to get final position
-		finalPos.x = this->m_playerCurrentPosition.x + x;
-		finalPos.y = this->m_playerCurrentPosition.y + y;
-
-		
-
-		
-		return finalPos;
-}
-
 void Player::UpdateWindowBoundsCollision()
 {
-	std::cout << this->GetPlayerPosition().y - this->m_width / 2<<std::endl;
+	std::cout << this->GetPlayerPosition().y - this->m_width / 2 << std::endl;
 	if (this->GetColliderPosition().x - this->m_width / 2 <= 0.f) {
-		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x + m_width/2, this->GetPlayerPosition().y));
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x + m_width / 2, this->GetPlayerPosition().y));
 	}
 	else if (this->GetColliderPosition().x + this->m_width / 2 >= Globals::screenWidth) {
-		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x-m_width/2, this->GetPlayerPosition().y));
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x - m_width / 2, this->GetPlayerPosition().y));
 	}
 	if (this->GetColliderPosition().y + this->m_height / 2 >= Globals::screenHeight) {
-		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x , this->GetPlayerPosition().y - m_height/2));
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y - m_height / 2));
 	}
 	else if (this->GetColliderPosition().y - this->m_height / 2 <= 0.f) {
-		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height/2 ));
+		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height / 2));
 	}
 }
 
-void Player::Skill(GLfloat &passedTime, GLfloat deltaTime) {
+void Player::Skill(GLfloat& passedTime, GLfloat deltaTime) {
 	if (passedTime >= m_skillCooldown) {
 		m_isCooldownSkill = false;
 	}
 	if (m_isCooldownSkill) {
 		if (passedTime < m_skillActiveTime) {
-			SetPlayerSpeed(500);
+			SetPlayerSpeed(INIT_SPEED * 1.2f);
 		}
 		else
 		{

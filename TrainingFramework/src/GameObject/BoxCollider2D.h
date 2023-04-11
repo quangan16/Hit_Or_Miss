@@ -8,11 +8,11 @@ public:
     // Constructor
     BoxCollider2D();
     BoxCollider2D(Vector2 objectPos, GLfloat width, GLfloat height);
-    
+
 
     // Check collision with another box collider
-    bool CheckCollision(const BoxCollider2D& otherBox) override;
-      
+    bool CheckCollision(Vector2 pos, float width, float height) override;
+
 
 protected:
     GLfloat m_width;

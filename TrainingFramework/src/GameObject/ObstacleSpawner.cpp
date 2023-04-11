@@ -4,54 +4,42 @@
 
 
 
-ObstacleSpawner::~ObstacleSpawner(){};
-ObjectPool<std::shared_ptr<SkillObstacle>>* objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
+ObstacleSpawner::~ObstacleSpawner() {};
 
-void ObstacleSpawner::UpdateSpawn(std::shared_ptr<Player> player, GLfloat intervalTime, GLfloat deltaTime, std::shared_ptr<SpriteAnimation>& m_animationSprite, std::list<std::shared_ptr<SpriteAnimation>>& m_listAnimation) {
-    m_counter += deltaTime;
-    
-    
+
+void ObstacleSpawner::UpdateSpawn(GLfloat deltaTime) {
+    m_intervalTime += deltaTime;
+    int screenWidth = Globals::screenWidth;
+    int screenHeight = Globals::screenHeight;
+
     // Generate random position off-screen
-    int x = rand() % Globals::screenWidth;
-    int y = rand() % Globals::screenHeight;
+    int x = rand() % screenWidth;
+    int y = rand() % screenHeight;
     if (rand() % 2 == 0) {
-        x -= Globals::screenWidth;
+        x -= screenWidth;
     }
     else {
-        x += Globals::screenWidth;
+        x += screenWidth;
     }
     if (rand() % 2 == 0) {
-        y -= Globals::screenHeight;
+        y -= screenHeight;
     }
     else {
-        y += Globals::screenHeight;
+        y += screenHeight;
     }
 
 
-    if (m_counter > intervalTime)
+    if (m_intervalTime > 1)
     {
-		player->GetPlayerRandomPosCircle(300);
         this->SetSpawnPosition(Vector2(x, y));
-
-        m_obstacle = objectPool->acquireObject();
-
-        if (m_obstacle->GetCurrentPosition().x < 0 || m_obstacle->GetCurrentPosition().x >(float)Globals::screenWidth || m_obstacle->GetCurrentPosition().y < 0 || m_obstacle->GetCurrentPosition().y >(float)Globals::screenHeight) {
-            objectPool->releaseObject(m_obstacle);
-            std::cout << "Released";
-        }
-        else {
-            m_obstacle->FlyToTarget(m_obstacle->GetStartPosition(), player->GetPlayerRandomPosCircle(50.0f), deltaTime);
-            std::cout << m_obstacle->GetCurrentPosition().x;
-           
-        }
-       
-        m_counter = 0.f;
-        // Spawn enemy at generated position with chosen direction
-        
-        /* add enemy to game world */
+        m_intervalTime = 0;
     }
-    
+
+    // Spawn enemy at generated position with chosen direction
+
+    /* add enemy to game world */
 }
+
 void ObstacleSpawner::ShootSkill()
 {
 
@@ -61,13 +49,13 @@ void ObstacleSpawner::ShootSkill()
 
 void ObstacleSpawner::SetSpawnPosition(Vector2 spawnPosition)
 {
-	this->m_spawnPosition.x = spawnPosition.x;
-	this->m_spawnPosition.y = spawnPosition.y;
+    this->m_spawnPosition.x = spawnPosition.x;
+    this->m_spawnPosition.y = spawnPosition.y;
 }
 
 Vector2 ObstacleSpawner::GetSpawnPosition()
 {
-	return m_spawnPosition;
+    return m_spawnPosition;
 }
 
 
