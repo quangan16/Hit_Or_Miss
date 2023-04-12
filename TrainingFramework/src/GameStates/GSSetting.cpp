@@ -79,7 +79,7 @@ void GSSetting::Init()
 	m_textGameSetting->Set2DPosition(Vector2(540.0f, 80.0f));
 
 	// Volumn title
-	m_textGameVolumn = std::make_shared< Text>(shader, font, "Volumn", TextColor::WHITE, 2.0f);
+	m_textGameVolumn = std::make_shared< Text>(shader, font, "Music", TextColor::WHITE, 2.0f);
 	m_textGameVolumn->Set2DPosition(Vector2(500.0f, 280.0f));
 
 	m_KeyPress = 0;

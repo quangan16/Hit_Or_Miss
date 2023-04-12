@@ -104,6 +104,16 @@ void GSPlay::Init()
 	m_skillCooldownDisplay->Set2DPosition((float)Globals::screenWidth - 75.0f, (float)Globals::screenHeight - 75.0f);
 	m_skillCooldownDisplay->SetSize(75, 75);
 
+
+	texture = ResourceManagers::GetInstance()->GetTexture("Flash.tga");
+	m_skillDisplay2 = std::make_shared<Sprite2D>(model, shader, texture);
+	m_skillDisplay2->Set2DPosition((float)Globals::screenWidth - 155.0f, (float)Globals::screenHeight - 75.0f);
+	m_skillDisplay2->SetSize(75, 75);
+	texture = ResourceManagers::GetInstance()->GetTexture("FlashOnCooldown.tga");
+	m_flashCooldownDisplay= std::make_shared<Sprite2D>(model, shader, texture);
+	m_flashCooldownDisplay->Set2DPosition((float)Globals::screenWidth - 155.0f, (float)Globals::screenHeight - 75.0f);
+	m_flashCooldownDisplay->SetSize(75, 75);
+
 	// button close
 	texture = ResourceManagers::GetInstance()->GetTexture("Back.tga");
 	std::shared_ptr<GameButton>  button = std::make_shared<GameButton>(model, shader, texture);
@@ -381,20 +391,8 @@ void GSPlay::HandleEvents(GLfloat deltatime)
 
 
 		}
-		if (m_KeyPress & (1 << 4))//Handle event when key space was pressed
-		{
-			if (m_passedCooldownTime >= m_player->GetSkillCooldown()) {
-				m_player->SetCooldownSkil(true);
-				m_passedCooldownTime = 0;
-			}
-		}
-		if (m_KeyPress & (1 << 5))//Handle event when key space was pressed
-		{
-			if (m_flashCooldownTime >= m_player->GetFlashCooldownTime()){
-				
-				m_passedCooldownTime = 0;
-			}
-		}
+		
+		
 		if (m_IsCalled == false)
 		{
 
@@ -447,10 +445,17 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 		case KEY_SPACE://Key ' ' was pressed
 
 			m_KeyPress |= 1 << 4;
-
+			if (m_passedCooldownTime >= m_player->GetSkillCooldown()) {
+				m_player->SetCooldownSkil(true);
+				m_passedCooldownTime = 0;
+			}
 			break;
 		case KEY_FLASH://Key 'F' was pressed
-			m_player->FlashWithMouse(m_mouseDirection);
+			if(!m_isStun)
+			{
+				m_player->FlashWithMouse(m_mouseDirection);
+			}
+			
 			m_KeyPress |= 1 << 5;
 
 			break;
@@ -562,11 +567,11 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 void GSPlay::Update(float deltaTime)
 {
 	
-	//std::cout << "passTime" << m_passedCooldownTime << "\n";
+	std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
 	m_player->HandleSkillCooldown(deltaTime);
-	std::cout << m_player->GetFlashCooldownTime()<< std::endl;
+	//std::cout << m_player->GetFlashCooldownTime()<< std::endl;
 	/*std::cout << m_obstacleAnimationSprite->Get2DPosition().y << " " << m_obstacleAnimationSprite2->Get2DPosition().y << std::endl;*/
 
 	if (i == 1) {
@@ -641,6 +646,8 @@ void GSPlay::Update(float deltaTime)
 		if (m_stunTimer < 1) {
 			m_stunTimer += deltaTime;
 			m_player->SetPlayerSpeed(0);
+			m_player->SetPlayerState(ROOTED);
+			m_player->HandleAnimationState(m_playerAnimationSprite,m_playerAnimationList);
 		}
 		else {
 			m_isStun = false;
@@ -670,7 +677,7 @@ void GSPlay::Update(float deltaTime)
 	}
 	
 	m_hitAnimationDuration -= deltaTime;
-	std::cout << m_playerHit<<std::endl;
+	//std::cout << m_playerHit<<std::endl;
 	for (int i = 0; i < enemies2.size(); i++) {
 		if (activeStatus2[i]) {
 			enemies2[i]->SetColliderPosition(enemies2[i]->GetEnemyPosition());
@@ -740,14 +747,26 @@ void GSPlay::Draw()
 		else {
 			m_skillCooldownDisplay->Draw();
 		}
+		if(m_player->GetFlashCooldownTime()<=0)
+		{
+			m_skillDisplay2->Draw();
+		}
+		else
+		{
+			m_flashCooldownDisplay->Draw();
+		}
 		//Render enemy
 		EnemiesDraw(enemies1, activeStatus1);
 		EnemiesDraw(enemies2, activeStatus2);
 		EnemiesDraw(enemies3, activeStatus3);
 		EnemiesDraw(enemies4, activeStatus4);
+	}else
+	{
+		m_player->SetPlayerState(DYING);
+
 	}
-
-
+	
+	
 	for (auto it : m_obstacleAnimationList)
 	{
 		it->Draw();

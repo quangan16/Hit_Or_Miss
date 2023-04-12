@@ -82,9 +82,11 @@ private:
 	std::vector<bool> activeStatus4;
 	ObjectPool<std::shared_ptr<SkillObstacle>>* m_objectPool;
 	std::shared_ptr<Sprite2D>	m_skillCooldownDisplay;
+	std::shared_ptr<Sprite2D>	m_flashCooldownDisplay;
 	GLfloat m_passedCooldownTime;
 	GLfloat m_flashCooldownTime;
 	std::shared_ptr<Sprite2D> m_skillDisplay;
+	std::shared_ptr<Sprite2D> m_skillDisplay2;
 
 	std::shared_ptr<GameButton> m_soundButtonPlay;
 	std::shared_ptr<GameButton> m_soundButtonOff;

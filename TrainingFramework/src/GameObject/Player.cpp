@@ -347,25 +347,33 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 		break;
 	}
 	case ROOTED: {
-		if (this->GetPlayerFaceDirection() == DOWN)
+		if (this->m_playerCurrentDirection == DOWN)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Down//WarriorDownDeath.tga");
 		}
-		else if (this->GetPlayerFaceDirection() == LEFT)
+		else if (this->m_playerCurrentDirection == LEFT)
 		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		}
-		else if (this->GetPlayerFaceDirection() == RIGHT)
-		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		}
-		else if (this->GetPlayerFaceDirection() == UP)
-		{
-			m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
-		}
-		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 6, 17, 0, 0.1f);
 
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Left//WarriorLeftDeath.tga");
+
+		}
+		else if (this->m_playerCurrentDirection == RIGHT)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior//Right/WarriorRightDeath.tga");
+
+		}
+		else if (this->m_playerCurrentDirection == UP)
+		{
+			texture = ResourceManagers::GetInstance()->GetTexture("Warrior/Up/WarriorUpDeath.tga");
+
+		}
+
+		m_animationSprite = std::make_shared<SpriteAnimation>(model, shader, texture, 5, 1, 0, 0.05f);
+		m_animationSprite->Set2DPosition(this->GetPlayerPosition().x, this->GetPlayerPosition().y);
+		m_animationSprite->SetSize(120, 120);
+		m_listAnimation.clear();
 		m_listAnimation.push_back(m_animationSprite);
+
 		break;
 	}
 	case DYING: {
@@ -457,7 +465,7 @@ void Player::Skill(GLfloat& passedTime, GLfloat deltaTime) {
 	}
 	if (m_isCooldownSkill) {
 		if (passedTime < m_skillActiveTime) {
-			SetPlayerSpeed(INIT_SPEED * 1.2f);
+			SetPlayerSpeed(INIT_SPEED * 1.5f);
 		}
 		else
 		{
@@ -489,8 +497,8 @@ void Player::SetFlashCooldown(GLfloat isCooldown)
 void Player::FlashWithMouse(Vector2 direction)
 {
 	if (m_flashCooldown<=0.f) {
-		
-			this->Move(direction * 150.0f);
+			
+			this->Move(direction * 200.0f);
 			m_flashCooldown = 20.f;
 		
 
