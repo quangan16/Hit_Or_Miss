@@ -38,15 +38,12 @@ std::shared_ptr<GameStateBase> GameStateBase::CreateState(StateType stt)
 	case StateType::STATE_PICKMOVE:
 		gs = std::make_shared<GSPickMove>();
 		break;
-<<<<<<< HEAD
-=======
 	case StateType::STATE_ENDGAME:
 		gs = std::make_shared<GSEndGame>();
 		break;
 	case StateType::STATE_PAUSEGAME:
 		gs = std::make_shared<GSPauseGame>();
 		break;
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
 	case StateType::STATE_RECORD:
 		gs = std::make_shared<GSRecord>();
 		break;

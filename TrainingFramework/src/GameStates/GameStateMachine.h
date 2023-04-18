@@ -13,11 +13,8 @@ enum class StateType
 	STATE_PLAY,
 	STATE_SETTING,
 	STATE_PICKMOVE,
-<<<<<<< HEAD
-=======
 	STATE_ENDGAME,
 	STATE_PAUSEGAME,
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
 	STATE_RECORD
 };
 

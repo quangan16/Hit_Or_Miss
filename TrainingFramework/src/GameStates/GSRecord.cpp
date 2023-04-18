@@ -1,8 +1,8 @@
 #include "GSRecord.h"
-<<<<<<< HEAD
+
 #include "GSSetting.h"
-=======
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
+
 #include "Shader.h"
 #include "Texture.h"
 #include "Model.h"
@@ -25,11 +25,9 @@ extern int isPlayingSound;
 
 GSRecord::GSRecord()
 {
-<<<<<<< HEAD
-	
-=======
+
 	m_KeyPress = 0;
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
 }
 
 
@@ -60,7 +58,7 @@ void GSRecord::Init()
 		});
 	m_listButton.push_back(button);
 
-<<<<<<< HEAD
+
 	
 
 	// Volumn title
@@ -68,7 +66,7 @@ void GSRecord::Init()
 	m_textGameVolumn->Set2DPosition(Vector2(500.0f, 280.0f));
 
 	m_KeyPress = 0;*/
-=======
+
 	// Setting title
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Palamecia Titling.otf");
@@ -89,7 +87,7 @@ void GSRecord::Init()
 	m_textTop3->Set2DPosition(Vector2(500.0f, 400.0f));
 
 	m_KeyPress = 0;
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
 
 }
 
@@ -127,7 +125,7 @@ void GSRecord::HandleTouchEvents(float x, float y, bool bIsPressed)
 		}
 	}
 
-<<<<<<< HEAD
+
 	/*if (isPlayingSound == 1)
 	{
 		m_soundButtonPlay->HandleTouchEvents(x, y, bIsPressed);
@@ -137,8 +135,8 @@ void GSRecord::HandleTouchEvents(float x, float y, bool bIsPressed)
 		m_soundButtonOff->HandleTouchEvents(x, y, bIsPressed);
 	}*/
 
-=======
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
+
 }
 
 void GSRecord::HandleMouseMoveEvents(float x, float y)
@@ -154,11 +152,10 @@ void GSRecord::Update(float deltaTime)
 	}
 
 
-<<<<<<< HEAD
+
 	/*m_soundButtonPlay->Update(deltaTime);
 	m_soundButtonOff->Update(deltaTime);*/
-=======
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
 }
 
 void GSRecord::Draw()
@@ -169,7 +166,7 @@ void GSRecord::Draw()
 		it->Draw();
 	}
 
-<<<<<<< HEAD
+
 	/*if (isPlayingSound == 1)
 	{
 		m_soundButtonPlay->Draw();
@@ -180,10 +177,10 @@ void GSRecord::Draw()
 	}
 	m_textGameSetting->Draw();
 	m_textGameVolumn->Draw();*/
-=======
+
 	m_textGameRecord->Draw();
 	m_textTop1->Draw();
 	m_textTop2->Draw();
 	m_textTop3->Draw();
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
 }

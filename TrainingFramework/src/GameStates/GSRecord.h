@@ -1,9 +1,6 @@
 #pragma once
 #include "GameStateBase.h"
-<<<<<<< HEAD
-=======
 
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
 class Sprite2D;
 class Text;
 class GameButton;
@@ -32,7 +29,7 @@ public:
 private:
 	std::shared_ptr<Sprite2D>				m_background;
 	std::list<std::shared_ptr<GameButton>>	m_listButton;
-<<<<<<< HEAD
+
 	std::shared_ptr<Text>					m_lable1;
 	std::shared_ptr<Text>					m_lable2;
 	std::shared_ptr<Text>					m_lable3;
@@ -40,7 +37,7 @@ private:
 					
 
 	
-=======
+
 	std::shared_ptr<Text>					m_textGameRecord;
 	std::shared_ptr<Text>					m_textTop1;
 	std::shared_ptr<Text>					m_textTop2;
@@ -48,6 +45,6 @@ private:
 
 	std::shared_ptr<GameButton> m_soundButtonPlay;
 	std::shared_ptr<GameButton> m_soundButtonOff;
->>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
+
 };
 
