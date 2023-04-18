@@ -57,7 +57,7 @@ void ObstacleSpawner::UpdateSpawn(std::shared_ptr<SpriteAnimation> &obstacleAnim
 	if (obstacle->GetCurrentPosition().x < -60.f || obstacle->GetCurrentPosition().x >(float)Globals::screenWidth + 60.f || obstacle->GetCurrentPosition().y < -60.f || obstacle->GetCurrentPosition().y >(float)Globals::screenHeight + 60.f) {
 
 		(*objectPool)->releaseObject(obstacle);
-		std::cout << "take back";
+		//std::cout << "take back";
 
 	}
 	else {

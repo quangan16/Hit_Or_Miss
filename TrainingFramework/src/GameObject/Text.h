@@ -42,6 +42,9 @@ public:
 	void		Set2DPosition(GLfloat x, GLfloat y);
 	void		Set2DPosition(Vector2 pos);
 
+
+	GLint		GetWidth();
+	GLint		GetHeight();
 private:
 	std::string				m_text;
 	std::shared_ptr<Font>	m_font;

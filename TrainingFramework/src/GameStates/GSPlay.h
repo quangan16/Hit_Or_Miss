@@ -4,6 +4,7 @@
 #include "ObjectPool.h"
 #include "Player.h"
 #include "SkillObstacle.h"
+#include "Timer.h"
 
 class ObstacleSpawner;
 class Sprite2D;
@@ -56,6 +57,7 @@ private:
 	std::shared_ptr<SpriteAnimation>	m_obstacleAnimationSprite3;
 	std::shared_ptr<SpriteAnimation>	m_mouseClickAnimationSprite;
 	std::shared_ptr<Sprite2D>	m_background;
+	std::shared_ptr<Sprite2D>	m_timerBG;
 	std::shared_ptr<Text>		m_score;
 	std::shared_ptr<Player>		m_player;
 	std::shared_ptr<SkillObstacle> m_obstacle;
@@ -91,6 +93,9 @@ private:
 	std::shared_ptr<GameButton> m_soundButtonPlay;
 	std::shared_ptr<GameButton> m_soundButtonOff;
 
+	std::shared_ptr<Timer> m_surviveTime;
+	std::shared_ptr<Text> m_surviveTimeDisplay;
+
 	//std::shared_ptr<GameButton> m_backMenuButton;
 
 	std::shared_ptr<Sprite2D>	m_heartIcon;
@@ -101,6 +106,7 @@ private:
 	GLfloat m_spawnTimePassed;
 	GLfloat m_slowTimer;
 	GLfloat m_stunTimer;
+	
 
 	bool m_isSlow;
 	bool m_isStun;

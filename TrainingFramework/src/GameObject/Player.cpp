@@ -134,7 +134,7 @@ void Player::MoveByClick(std::shared_ptr<SpriteAnimation>& m_animationSprite, st
 		}
 		if (isCalled == false)
 		{
-			std::cout << ((atan2(directionY, directionX) - M_PI / 2)) << std::endl;
+			//std::cout << ((atan2(directionY, directionX) - M_PI / 2)) << std::endl;
 
 			this->HandleAnimationState(m_animationSprite, m_listAnimation);
 			isCalled = true;

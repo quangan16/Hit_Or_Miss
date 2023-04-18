@@ -1,6 +1,7 @@
 #include "GSPlay.h"
 
 #include <memory>
+#include <memory>
 
 #include "Player.h"
 #include "Shader.h"
@@ -53,6 +54,7 @@ GSPlay::~GSPlay()
 
 void GSPlay::Init()
 {
+	
 	m_IsCalled = false;
 	ObjectPool<std::shared_ptr<SkillObstacle>>* objectPool = ObjectPool<std::shared_ptr<SkillObstacle>>::getInstance();
 	objectPool->prepareObject(20, std::make_shared<SkillObstacle>());
@@ -216,12 +218,18 @@ void GSPlay::Init()
 	m_obstacleAnimationList.clear();
 	m_obstacleAnimationList.push_back(m_obstacleAnimationSprite);
 	m_obstacleAnimationList2.push_back(m_obstacleAnimationSprite2);*/
-
+	m_surviveTime = std::make_shared<Timer>();
+	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
+	font = ResourceManagers::GetInstance()->GetFont("Digital Regular.ttf");
+	m_surviveTimeDisplay = std::make_shared<Text>(shader, font, m_surviveTime->DisplaySurviveTime(), TextColor::CYAN, 3.0f);
+	m_surviveTimeDisplay->Set2DPosition(Vector2(500.0f, 280.0f));
 }
 
 void GSPlay::Exit()
 {
 }
+
+
 
 
 void GSPlay::Pause()
@@ -237,10 +245,7 @@ void GSPlay::Resume()
 {
 }
 
-//void GSPlay::CheckCollision()
-//{
-//	CheckCollision();
-//}
+
 
 //Tao enemy
 void GSPlay::EnemySpawn(std::vector<std::shared_ptr<Enemy>>& enemies, std::vector<bool>& activeStatus) {
@@ -566,8 +571,13 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
-	
-	std::cout << "passTime" << m_passedCooldownTime << "\n";
+	/*if(m_player->GetPlayerHealth()>0)
+	{
+		m_elapsedTimer += deltaTime;
+	}*/
+	m_surviveTime->CountSurviveTime(deltaTime);
+	m_surviveTimeDisplay->SetText(m_surviveTime->DisplaySurviveTime());
+	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);
 	m_player->UpdateWindowBoundsCollision();
 	m_player->HandleSkillCooldown(deltaTime);
@@ -725,7 +735,7 @@ void GSPlay::Draw()
 	//Render background
 	m_background->Draw();
 
-
+	m_surviveTimeDisplay->Draw();
 	//Render button list
 	for (auto it : m_listButton)
 	{
@@ -755,6 +765,7 @@ void GSPlay::Draw()
 		{
 			m_flashCooldownDisplay->Draw();
 		}
+		
 		//Render enemy
 		EnemiesDraw(enemies1, activeStatus1);
 		EnemiesDraw(enemies2, activeStatus2);
@@ -783,6 +794,7 @@ void GSPlay::Draw()
 	//Draw end game
 	if (m_player->GetPlayerHealth() < 1)
 	{
+		
 		m_score->Draw();
 		//m_backMenuButton->Draw();
 	}

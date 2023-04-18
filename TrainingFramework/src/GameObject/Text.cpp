@@ -180,3 +180,13 @@ void Text::Set2DPosition(Vector2 pos)
 	m_position = Vector3(xx, yy, 1.0f);
 	CalculateWorldMatrix();
 }
+
+GLint Text::GetWidth()
+{
+	return this->m_iWidth;
+}
+
+GLint Text::GetHeight()
+{
+	return this->m_iHeight;
+}
