@@ -15,6 +15,7 @@
 #include "Text.h"
 #include "GameButton.h"
 #include "ObstacleSpawner.h"
+#include "Record.h"
 #include "SpriteAnimation.h"
 #include "SkillObstacle.h"
 
@@ -221,12 +222,17 @@ void GSPlay::Init()
 	m_surviveTime = std::make_shared<Timer>();
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	font = ResourceManagers::GetInstance()->GetFont("Digital Regular.ttf");
-	m_surviveTimeDisplay = std::make_shared<Text>(shader, font, m_surviveTime->DisplaySurviveTime(), TextColor::CYAN, 3.0f);
-	m_surviveTimeDisplay->Set2DPosition(Vector2(500.0f, 280.0f));
+	m_surviveTimeDisplay = std::make_shared<Text>(shader, font, m_surviveTime->DisplaySurviveTime(), TextColor::YELLOW, 3.0f);
+	m_surviveTimeDisplay->Set2DPosition(Vector2(Globals::screenWidth / 2 - 110.f, 70.0f));
+	m_record = std::make_shared<Record>();
+	m_record->LoadRecord();
 }
 
 void GSPlay::Exit()
 {
+	m_record->AddRecord(m_surviveTime);
+	std::cout << m_surviveTime->GetTimeInMinutes();
+	m_record->SaveRecord();
 }
 
 
@@ -575,7 +581,15 @@ void GSPlay::Update(float deltaTime)
 	{
 		m_elapsedTimer += deltaTime;
 	}*/
-	m_surviveTime->CountSurviveTime(deltaTime);
+	
+	if(m_player->GetPlayerHealth()>0)
+	{
+		m_surviveTime->CountSurviveTime(deltaTime);
+	}
+	else
+	{
+		
+	}
 	m_surviveTimeDisplay->SetText(m_surviveTime->DisplaySurviveTime());
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
 	m_player->Skill(m_passedCooldownTime, deltaTime);

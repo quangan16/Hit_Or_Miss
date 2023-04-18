@@ -28,6 +28,7 @@
     <ClCompile Include="src\TrainingFramework.cpp" />
     <ClCompile Include="src\GameStates\GSPickMove.cpp" />
     <ClCompile Include="src\GameObject\Timer.cpp" />
+    <ClCompile Include="src\GameObject\Record.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
@@ -61,6 +62,7 @@
     <ClInclude Include="src\GameObject\ObjectPool.h" />
     <ClInclude Include="src\GameStates\GSPickMove.h" />
     <ClInclude Include="src\GameObject\Timer.h" />
+    <ClInclude Include="src\GameObject\Record.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

@@ -11,11 +11,12 @@ private:
     // Get current time
     std::chrono::time_point<std::chrono::steady_clock> startTime = std::chrono::steady_clock::now();
 public:
-    Timer::Timer() : gameTimeInMinutes{ 0 }, gameTimeInSeconds{ 0 }{};
+    Timer::Timer() : gameTimeInMinutes{ 0.f }, gameTimeInSeconds{ 0.f }{}
     std::string DisplaySurviveTime();
     void CountSurviveTime(GLfloat deltaTime);
-    void SetTime();
-    GLint GetTime(GLint gameTimeInSeconds, GLint gameTimeInMinutes);
+    void SetTime(GLfloat timeInMins, GLfloat timeInSecs);
+    GLint GetTimeInSeconds();
+    GLint GetTimeInMinutes();
     // Loop until the program is manually ended
    
 

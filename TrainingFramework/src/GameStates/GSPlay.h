@@ -6,6 +6,7 @@
 #include "SkillObstacle.h"
 #include "Timer.h"
 
+class Record;
 class ObstacleSpawner;
 class Sprite2D;
 class Sprite3D;
@@ -100,6 +101,7 @@ private:
 
 	std::shared_ptr<Sprite2D>	m_heartIcon;
 	std::vector<std::shared_ptr<Sprite2D>> m_heartIcons;
+	std::shared_ptr<Record> m_record;
 
 	GLfloat m_mainTimer;
 	GLfloat m_spawnTime;

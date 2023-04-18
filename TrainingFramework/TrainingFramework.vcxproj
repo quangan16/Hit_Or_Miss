@@ -346,6 +346,7 @@
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameObject\Record.cpp" />
     <ClCompile Include="src\GameObject\CircleCollider2D.cpp" />
     <ClCompile Include="src\GameObject\BoxCollider2D.cpp" />
     <ClCompile Include="src\GameObject\Enemy.cpp" />
@@ -375,6 +376,7 @@
     <ClCompile Include="src\TrainingFramework.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\GameObject\Record.h" />
     <ClInclude Include="src\GameObject\ObjectPool.h" />
     <ClInclude Include="src\GameObject\Collider2D.h" />
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
