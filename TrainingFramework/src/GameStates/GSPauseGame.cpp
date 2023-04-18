@@ -1,4 +1,4 @@
-#include "GSSetting.h"
+#include "GSPauseGame.h"
 #include "Shader.h"
 #include "Texture.h"
 #include "Model.h"
@@ -19,19 +19,19 @@ extern int isPlayingSoundMenu;
 extern int isPlayingSoundPlay;
 extern int isPlayingSound;
 
-GSSetting::GSSetting()
+GSPauseGame::GSPauseGame()
 {
 	m_KeyPress = 0;
 }
 
 
-GSSetting::~GSSetting()
+GSPauseGame::~GSPauseGame()
 {
 }
 
 
 
-void GSSetting::Init()
+void GSPauseGame::Init()
 {
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("3995243.tga");
@@ -55,64 +55,89 @@ void GSSetting::Init()
 	// button volumnPlay
 	auto textureP = ResourceManagers::GetInstance()->GetTexture("MusicPlay.tga");
 	m_soundButtonPlay = std::make_shared<GameButton>(model, shader, textureP);
-	m_soundButtonPlay->Set2DPosition(Globals::screenWidth - 500.0f, 260.0f);
+	m_soundButtonPlay->Set2DPosition(Globals::screenWidth - 520.0f, 265.0f);
 	m_soundButtonPlay->SetSize(50, 50);
 	m_soundButtonPlay->SetOnClick([this]() {
 		isPlayingSound = 0;
-		isPlayingSoundMenu = 0;
-		ResourceManagers::GetInstance()->StopSound(SoundMenu);
+		isPlayingSoundPlay = 0;
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
 		});
 
 	// button volumnOff
 	auto textureO = ResourceManagers::GetInstance()->GetTexture("MusicOff.tga");
 	m_soundButtonOff = std::make_shared<GameButton>(model, shader, textureO);
-	m_soundButtonOff->Set2DPosition(Globals::screenWidth - 500.0f, 260.0f);
+	m_soundButtonOff->Set2DPosition(Globals::screenWidth - 520.0f, 265.0f);
 	m_soundButtonOff->SetSize(50, 50);
 	m_soundButtonOff->SetOnClick([this]() {
 		isPlayingSound = 1;
-		isPlayingSoundMenu = 1;
-		ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+		isPlayingSoundPlay = 1;
+		ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
 		});
+
+	// button home
+	texture = ResourceManagers::GetInstance()->GetTexture("Home.tga");
+	button = std::make_shared<GameButton>(model, shader, texture);
+	button->Set2DPosition(Globals::screenWidth - 720.0f, 400.0f);
+	button->SetSize(100, 100);
+	button->SetOnClick([this]() {
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_MENU);
+		});
+	m_listButton.push_back(button);
+
+	// button replay
+	texture = ResourceManagers::GetInstance()->GetTexture("Replay.tga");
+	button = std::make_shared<GameButton>(model, shader, texture);
+	button->Set2DPosition(Globals::screenWidth - 530.0f, 400.0f);
+	button->SetSize(100, 100);
+	button->SetOnClick([this]() {
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PLAY);
+		});
+	m_listButton.push_back(button);
 
 	// Setting title
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("WoodBeadsDemoRegular.otf");
-	m_textGameSetting = std::make_shared< Text>(shader, font, "Setting", TextColor::WHITE, 3.0f);
-	m_textGameSetting->Set2DPosition(Vector2(540.0f, 80.0f));
+	m_textGameSetting = std::make_shared< Text>(shader, font, "PauseGame", TextColor::WHITE, 3.0f);
+	m_textGameSetting->Set2DPosition(Vector2(480.0f, 80.0f));
 
 	// Volumn title
 	m_textGameVolumn = std::make_shared< Text>(shader, font, "Music", TextColor::WHITE, 2.0f);
 	m_textGameVolumn->Set2DPosition(Vector2(500.0f, 280.0f));
 
 	m_KeyPress = 0;
-
+	if (isPlayingSound == 1) {
+		//ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		//ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+	}
 }
 
-void GSSetting::Exit()
+void GSPauseGame::Exit()
 {
 }
 
 
-void GSSetting::Pause()
+void GSPauseGame::Pause()
 {
+	//ResourceManagers::GetInstance()->StopSound(SoundMenu);
 }
 
-void GSSetting::Resume()
+void GSPauseGame::Resume()
 {
-}
 
-
-void GSSetting::HandleEvents(GLfloat deltaTime)
-{
 }
 
 
-
-void GSSetting::HandleKeyEvents(int key, bool bIsPressed)
+void GSPauseGame::HandleEvents(GLfloat deltaTime)
 {
 }
 
-void GSSetting::HandleTouchEvents(float x, float y, bool bIsPressed)
+
+
+void GSPauseGame::HandleKeyEvents(int key, bool bIsPressed)
+{
+}
+
+void GSPauseGame::HandleTouchEvents(float x, float y, bool bIsPressed)
 {
 	for (auto button : m_listButton)
 	{
@@ -133,11 +158,11 @@ void GSSetting::HandleTouchEvents(float x, float y, bool bIsPressed)
 
 }
 
-void GSSetting::HandleMouseMoveEvents(float x, float y)
+void GSPauseGame::HandleMouseMoveEvents(float x, float y)
 {
 }
 
-void GSSetting::Update(float deltaTime)
+void GSPauseGame::Update(float deltaTime)
 {
 	m_background->Update(deltaTime);
 	for (auto it : m_listButton)
@@ -150,7 +175,7 @@ void GSSetting::Update(float deltaTime)
 	m_soundButtonOff->Update(deltaTime);
 }
 
-void GSSetting::Draw()
+void GSPauseGame::Draw()
 {
 	m_background->Draw();
 	for (auto it : m_listButton)

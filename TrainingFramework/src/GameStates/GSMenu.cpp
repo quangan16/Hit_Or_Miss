@@ -58,14 +58,32 @@ void GSMenu::Init()
 		});
 	m_listButton.push_back(button);
 
+	// record button
+	texture = ResourceManagers::GetInstance()->GetTexture("Leaderboard.tga");
+	button = std::make_shared<GameButton>(model, shader, texture);
+	button->Set2DPosition(Globals::screenWidth - 1160.0f, 50.0f);
+	button->SetSize(50, 50);
+	button->SetOnClick([]() {
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_RECORD);
+		});
+	m_listButton.push_back(button);
+
 	// game title
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("WoodBeadsDemoRegular.otf");
 	m_textGameName = std::make_shared< Text>(shader, font, "Hit or Miss", Vector4(0.9f, 0.9f, 0.9f, 1.0f), 4.0f);
 	m_textGameName->Set2DPosition(Vector2(400, 200));
 
-	ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
-	isPlayingSoundMenu = 1;
+	//sound
+	if (isPlayingSoundPlay == 1) {
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		isPlayingSoundPlay = 0;
+	}
+
+	if (isPlayingSound == 1) {
+		ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+		isPlayingSoundMenu = 1;
+	}
 }
 
 void GSMenu::Exit()

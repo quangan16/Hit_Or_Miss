@@ -61,6 +61,7 @@ private:
 	std::shared_ptr<Sprite2D>	m_background;
 	std::shared_ptr<Sprite2D>	m_timerBG;
 	std::shared_ptr<Text>		m_score;
+	std::shared_ptr<Text>		m_time;
 	std::shared_ptr<Player>		m_player;
 	std::shared_ptr<SkillObstacle> m_obstacle;
 	std::shared_ptr<SkillObstacle> m_obstacle2;
@@ -92,13 +93,11 @@ private:
 	std::shared_ptr<Sprite2D> m_skillDisplay;
 	std::shared_ptr<Sprite2D> m_skillDisplay2;
 
-	std::shared_ptr<GameButton> m_soundButtonPlay;
-	std::shared_ptr<GameButton> m_soundButtonOff;
 
 	std::shared_ptr<Timer> m_surviveTime;
 	std::shared_ptr<Text> m_surviveTimeDisplay;
 
-	//std::shared_ptr<GameButton> m_backMenuButton;
+	std::shared_ptr<GameButton> m_endGameButton;
 
 	std::shared_ptr<Sprite2D>	m_heartIcon;
 	std::vector<std::shared_ptr<Sprite2D>> m_heartIcons;

@@ -31,6 +31,9 @@ extern int isPlayingSoundPlay;
 extern int isPlayingSound;
 extern int i;
 
+//Score
+extern GLfloat score;
+
 GSPlay::GSPlay()
 {
 	m_hitAnimationDuration = 2.0f;
@@ -126,34 +129,24 @@ void GSPlay::Init()
 	m_flashCooldownDisplay->Set2DPosition((float)Globals::screenWidth - 155.0f, (float)Globals::screenHeight - 75.0f);
 	m_flashCooldownDisplay->SetSize(75, 75);
 
-	// button close
-	texture = ResourceManagers::GetInstance()->GetTexture("Back.tga");
+	// button pause
+	texture = ResourceManagers::GetInstance()->GetTexture("Pause.tga");
 	std::shared_ptr<GameButton>  button = std::make_shared<GameButton>(model, shader, texture);
 	button->Set2DPosition(Globals::screenWidth - 50.0f, 50.0f);
 	button->SetSize(50, 50);
 	button->SetOnClick([this]() {
-		GameStateMachine::GetInstance()->PopState();
+		//GameStateMachine::GetInstance()->PopState();
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_PAUSEGAME);
 		});
 	m_listButton.push_back(button);
 
-	// button volumnPlay
-	auto textureP = ResourceManagers::GetInstance()->GetTexture("MusicPlay.tga");
-	m_soundButtonPlay = std::make_shared<GameButton>(model, shader, textureP);
-	m_soundButtonPlay->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
-	m_soundButtonPlay->SetSize(50, 50);
-	m_soundButtonPlay->SetOnClick([this]() {
-		isPlayingSound = 0;
-		ResourceManagers::GetInstance()->StopSound(SoundPlay);
-		});
-
-	// button volumnOff
-	auto textureO = ResourceManagers::GetInstance()->GetTexture("MusicOff.tga");
-	m_soundButtonOff = std::make_shared<GameButton>(model, shader, textureO);
-	m_soundButtonOff->Set2DPosition(Globals::screenWidth - 110.0f, 50.0f);
-	m_soundButtonOff->SetSize(50, 50);
-	m_soundButtonOff->SetOnClick([this]() {
-		isPlayingSound = 1;
-		ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
+	// end game button
+	auto textureO = ResourceManagers::GetInstance()->GetTexture("Next.tga");
+	m_endGameButton = std::make_shared<GameButton>(model, shader, textureO);
+	m_endGameButton->Set2DPosition(660.0f, 350.0f);
+	m_endGameButton->SetSize(70, 70);
+	m_endGameButton->SetOnClick([this]() {
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_ENDGAME);
 		});
 
 	// You lose! text
@@ -162,15 +155,6 @@ void GSPlay::Init()
 	m_score = std::make_shared< Text>(shader, font, "You lose!", TextColor::RED, 3.0f);
 	m_score->Set2DPosition(Vector2(500.0f, 280.0f));
 
-	//// back menu button
-	//texture = ResourceManagers::GetInstance()->GetTexture("Home.tga");
-	//m_backMenuButton = std::make_shared<GameButton>(model, shader, texture);
-	//m_backMenuButton->Set2DPosition(500.0f, 350.0f);
-	//m_backMenuButton->SetSize(50, 50);
-	//m_backMenuButton->SetOnClick([this]() {
-	//	GameStateMachine::GetInstance()->ChangeState(StateType::STATE_MENU);
-	//	});
-	////m_listButton.push_back(button);
 	m_player->SetPlayerFaceDirection(DOWN);
 	model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	shader = ResourceManagers::GetInstance()->GetShader("Animation");
@@ -209,11 +193,15 @@ void GSPlay::Init()
 
 	if (isPlayingSound == 1)
 	{
-		ResourceManagers::GetInstance()->StopSound(SoundMenu);
-		isPlayingSoundMenu = 0;
+		if (isPlayingSoundMenu == 1) {
+			ResourceManagers::GetInstance()->StopSound(SoundMenu);
+			isPlayingSoundMenu = 0;
+		}
+		if (isPlayingSoundPlay == 0) {
+			ResourceManagers::GetInstance()->PlaySound(SoundPlay, 1);
+			isPlayingSoundPlay = 1;
+		}
 
-		ResourceManagers::GetInstance()->PlaySound(SoundPlay);
-		isPlayingSoundPlay = 1;
 	}
 
 	/*model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
@@ -249,11 +237,6 @@ void GSPlay::Exit()
 
 void GSPlay::Pause()
 {
-	if (isPlayingSound == 1)
-	{
-		ResourceManagers::GetInstance()->StopSound(SoundPlay);
-		isPlayingSoundPlay = 0;
-	}
 }
 
 void GSPlay::Resume()
@@ -301,7 +284,10 @@ void GSPlay::EnemypoolCreate(std::vector<std::shared_ptr<Enemy>>& enemies, std::
 // Enemy controller
 void GSPlay::EnemiesController(GLfloat deltaTime) {
 	m_spawnTimePassed += deltaTime;
-	m_mainTimer += deltaTime;
+	if (m_player->GetPlayerHealth() > 0)
+	{
+		m_mainTimer += deltaTime;
+	}
 
 	EnemiesMovement(deltaTime, enemies1, activeStatus1);
 	EnemiesMovement(deltaTime, enemies2, activeStatus2);
@@ -564,17 +550,7 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 	
 		//m_player->MoveByClick(Vector2(x, y), bIsPressed);
 	
-
-	
-
-	if (isPlayingSound == 1)
-	{
-		m_soundButtonPlay->HandleTouchEvents(x, y, bIsPressed);
-	}
-	else
-	{
-		m_soundButtonOff->HandleTouchEvents(x, y, bIsPressed);
-	}
+	m_endGameButton->HandleTouchEvents(x, y, bIsPressed);
 
 }
 
@@ -586,10 +562,16 @@ void GSPlay::HandleMouseMoveEvents(float x, float y)
 
 void GSPlay::Update(float deltaTime)
 {
-	/*if(m_player->GetPlayerHealth()>0)
+	if (m_player->GetPlayerHealth() > 0)
 	{
-		m_elapsedTimer += deltaTime;
-	}*/
+		score = m_mainTimer;
+	}
+
+	//Time
+	auto shader = ResourceManagers::GetInstance()->GetShader("TextShader");
+	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
+	m_time = std::make_shared< Text>(shader, font, std::to_string((int)m_mainTimer), TextColor::RED, 2.0f);
+	m_time->Set2DPosition(Vector2(50.0f, 680.0f));
 	
 	if(m_player->GetPlayerHealth()>0)
 	{
@@ -659,9 +641,6 @@ void GSPlay::Update(float deltaTime)
 		it->Update(deltaTime);
 	}
 
-	//Update sound button
-	m_soundButtonPlay->Update(deltaTime);
-	m_soundButtonOff->Update(deltaTime);
 
 	if (m_isSlow) {
 		if (m_slowTimer < 3) {
@@ -819,6 +798,7 @@ void GSPlay::Draw()
 	//Render animation list
 	if (m_player->GetPlayerHealth() > 0)
 	{
+		m_time->Draw();
 
 		for (auto it : m_playerAnimationList)
 		{
@@ -870,18 +850,9 @@ void GSPlay::Draw()
 	{
 		
 		m_score->Draw();
-		//m_backMenuButton->Draw();
+		m_endGameButton->Draw();
 	}
 
-	// Draw sound button
-	if (isPlayingSound == 1)
-	{
-		m_soundButtonPlay->Draw();
-	}
-	else
-	{
-		m_soundButtonOff->Draw();
-	}
 
 	//Draw heart
 	if (m_player->GetPlayerHealth() > 0)

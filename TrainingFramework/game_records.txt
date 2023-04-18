@@ -5,5 +5,9 @@ Game Time (minutes): 0
 Game Time (seconds): 10
 
 Game Time (minutes): 0
+<<<<<<< HEAD
 Game Time (seconds): 10
+=======
+Game Time (seconds): 36
+>>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
 

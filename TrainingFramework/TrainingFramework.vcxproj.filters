@@ -30,6 +30,11 @@
     <ClCompile Include="src\GameObject\Timer.cpp" />
     <ClCompile Include="src\GameObject\Record.cpp" />
     <ClCompile Include="src\GameObject\Item.cpp" />
+<<<<<<< HEAD
+=======
+    <ClCompile Include="src\GameStates\GSEndGame.cpp" />
+    <ClCompile Include="src\GameStates\GSPauseGame.cpp" />
+>>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
     <ClCompile Include="src\GameStates\GSRecord.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -65,7 +70,12 @@
     <ClInclude Include="src\GameStates\GSPickMove.h" />
     <ClInclude Include="src\GameObject\Timer.h" />
     <ClInclude Include="src\GameObject\Record.h" />
+<<<<<<< HEAD
     <ClInclude Include="src\GameObject\Item.h" />
+=======
+    <ClInclude Include="src\GameStates\GSEndGame.h" />
+    <ClInclude Include="src\GameStates\GSPauseGame.h" />
+>>>>>>> af27a35425e16caf1724adfb4a6f212fb07a45e2
     <ClInclude Include="src\GameStates\GSRecord.h" />
   </ItemGroup>
   <ItemGroup>
