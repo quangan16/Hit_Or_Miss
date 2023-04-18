@@ -45,6 +45,8 @@ GSPlay::GSPlay()
 	m_isSlow = false;
 	m_isStun = false;
 	m_mainTimer = 0;
+	m_isActiveHealItem = false;
+	timeAfterItemSpawn = 0;
 }
 
 
@@ -96,6 +98,11 @@ void GSPlay::Init()
 	m_heartIcon->Set2DPosition(150, 50);
 	m_heartIcon->SetSize(50, 50);
 	m_heartIcons.push_back(m_heartIcon);
+
+	// Heal Item
+	texture = ResourceManagers::GetInstance()->GetTexture("chicken-leg.tga");
+	m_healItem = std::make_shared<Item>(model, shader, texture);
+	m_healItem->SetSize(64, 64);
 
 	// Skill 
 	texture = ResourceManagers::GetInstance()->GetTexture("Ghost.tga");
@@ -700,6 +707,23 @@ void GSPlay::Update(float deltaTime)
 		}
 	}
 	
+	//Item
+	timeAfterItemSpawn += deltaTime;
+	if ((int)m_mainTimer % 20 == 0 && m_mainTimer>0 && timeAfterItemSpawn >1) {
+			m_healItem->SetRandomPosition();
+			m_isActiveHealItem = true;
+			timeAfterItemSpawn = 0;
+	}
+	if (m_isActiveHealItem) {
+		if (m_player->CheckCollision(m_healItem->GetItemPosition(), 64, 64))
+		{
+			m_isActiveHealItem = false;
+			if (m_player->GetPlayerHealth() < 3) {
+				m_player->SetPlayerHealth(m_player->GetPlayerHealth() + 1);
+			}
+		}
+	}
+
 	m_hitAnimationDuration -= deltaTime;
 	//std::cout << m_playerHit<<std::endl;
 	for (int i = 0; i < enemies2.size(); i++) {
@@ -750,6 +774,12 @@ void GSPlay::Draw()
 	m_background->Draw();
 
 	m_surviveTimeDisplay->Draw();
+
+	//Draw item
+	if (m_isActiveHealItem) {
+		m_healItem->Draw();
+	}
+
 	//Render button list
 	for (auto it : m_listButton)
 	{
@@ -836,4 +866,6 @@ void GSPlay::Draw()
 	{
 		m_heartIcons[2]->Draw();
 	}
+
+	
 }
