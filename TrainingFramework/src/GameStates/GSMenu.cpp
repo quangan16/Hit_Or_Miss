@@ -64,8 +64,16 @@ void GSMenu::Init()
 	m_textGameName = std::make_shared< Text>(shader, font, "Hit or Miss", Vector4(0.9f, 0.9f, 0.9f, 1.0f), 4.0f);
 	m_textGameName->Set2DPosition(Vector2(400, 200));
 
-	ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
-	isPlayingSoundMenu = 1;
+	//sound
+	if (isPlayingSoundPlay == 1) {
+		ResourceManagers::GetInstance()->StopSound(SoundPlay);
+		isPlayingSoundPlay = 0;
+	}
+
+	if (isPlayingSound == 1) {
+		ResourceManagers::GetInstance()->PlaySound(SoundMenu, 1);
+		isPlayingSoundMenu = 1;
+	}
 }
 
 void GSMenu::Exit()

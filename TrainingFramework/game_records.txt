@@ -5,5 +5,5 @@ Game Time (minutes): 0
 Game Time (seconds): 3
 
 Game Time (minutes): 0
-Game Time (seconds): 8
+Game Time (seconds): 36
 
