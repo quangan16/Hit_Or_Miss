@@ -549,8 +549,11 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 
 	
 		//m_player->MoveByClick(Vector2(x, y), bIsPressed);
+	if (m_player->GetPlayerHealth() < 1)
+	{
+		m_endGameButton->HandleTouchEvents(x, y, bIsPressed);
+	}
 	
-	m_endGameButton->HandleTouchEvents(x, y, bIsPressed);
 
 }
 
@@ -673,8 +676,11 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies1[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies1[i]->GetEnemyPosition(), 50, 50))
 			{
+				if (m_player->GetPlayerHealth() > 0)
+				{
+					ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				}
 				
-				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
 				m_hitAnimationDuration = 2.0f;
 				if(m_hitAnimationDuration>0.f)
 				{
@@ -713,7 +719,11 @@ void GSPlay::Update(float deltaTime)
 			enemies2[i]->SetColliderPosition(enemies2[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies2[i]->GetEnemyPosition(), 50, 50))
 			{
-				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+
+				if (m_player->GetPlayerHealth() > 0)
+				{
+					ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				}
 				m_isSlow = true;
 				activeStatus2[i] = false;
 				m_hitAnimationDuration = 2.0f;
@@ -733,7 +743,10 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies3[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies3[i]->GetEnemyPosition(), 50, 50))
 			{
-				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				if (m_player->GetPlayerHealth() > 0)
+				{
+					ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				}
 				m_isStun = true;
 				activeStatus3[i] = false;
 				m_hitAnimationDuration = 2.0f;
@@ -753,7 +766,10 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies4[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies4[i]->GetEnemyPosition(), 50, 50))
 			{
-				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				if (m_player->GetPlayerHealth() > 0)
+				{
+					ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
+				}
 				activeStatus4[i] = false;
 				m_hitAnimationDuration = 2.0f;
 				if (m_hitAnimationDuration > 0.f)
