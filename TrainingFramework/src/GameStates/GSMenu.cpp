@@ -58,6 +58,16 @@ void GSMenu::Init()
 		});
 	m_listButton.push_back(button);
 
+	// record button
+	texture = ResourceManagers::GetInstance()->GetTexture("Leaderboard.tga");
+	button = std::make_shared<GameButton>(model, shader, texture);
+	button->Set2DPosition(Globals::screenWidth - 1160.0f, 50.0f);
+	button->SetSize(50, 50);
+	button->SetOnClick([]() {
+		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_RECORD);
+		});
+	m_listButton.push_back(button);
+
 	// game title
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("WoodBeadsDemoRegular.otf");

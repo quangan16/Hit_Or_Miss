@@ -375,6 +375,7 @@
     <ClCompile Include="src\GameStates\GSPauseGame.cpp" />
     <ClCompile Include="src\GameStates\GSPickMove.cpp" />
     <ClCompile Include="src\GameStates\GSPlay.cpp" />
+    <ClCompile Include="src\GameStates\GSRecord.cpp" />
     <ClCompile Include="src\GameStates\GSSetting.cpp" />
     <ClCompile Include="src\TrainingFramework.cpp" />
   </ItemGroup>
@@ -412,6 +413,7 @@
     <ClInclude Include="src\GameStates\GSPauseGame.h" />
     <ClInclude Include="src\GameStates\GSPickMove.h" />
     <ClInclude Include="src\GameStates\GSPlay.h" />
+    <ClInclude Include="src\GameStates\GSRecord.h" />
     <ClInclude Include="src\GameStates\GSSetting.h" />
   </ItemGroup>
   <ItemGroup>

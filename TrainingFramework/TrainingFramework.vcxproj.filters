@@ -32,6 +32,7 @@
     <ClCompile Include="src\GameObject\Item.cpp" />
     <ClCompile Include="src\GameStates\GSEndGame.cpp" />
     <ClCompile Include="src\GameStates\GSPauseGame.cpp" />
+    <ClCompile Include="src\GameStates\GSRecord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
@@ -68,6 +69,7 @@
     <ClInclude Include="src\GameObject\Record.h" />
     <ClInclude Include="src\GameStates\GSEndGame.h" />
     <ClInclude Include="src\GameStates\GSPauseGame.h" />
+    <ClInclude Include="src\GameStates\GSRecord.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

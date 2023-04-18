@@ -9,6 +9,7 @@
 #include "GSPickMove.h"
 #include "GSEndGame.h"
 #include "GSPauseGame.h"
+#include "GSRecord.h"
 #include "GameStatebase.h"
 
 GameStateBase::GameStateBase(StateType stateType) : m_stateType(stateType)
@@ -41,6 +42,9 @@ std::shared_ptr<GameStateBase> GameStateBase::CreateState(StateType stt)
 		break;
 	case StateType::STATE_PAUSEGAME:
 		gs = std::make_shared<GSPauseGame>();
+		break;
+	case StateType::STATE_RECORD:
+		gs = std::make_shared<GSRecord>();
 		break;
 	default:
 		break;
