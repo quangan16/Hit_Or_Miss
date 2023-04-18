@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "SkillObstacle.h"
 #include "Timer.h"
+#include "Item.h"
 
 class ObstacleSpawner;
 class Sprite2D;
@@ -106,9 +107,11 @@ private:
 	GLfloat m_spawnTimePassed;
 	GLfloat m_slowTimer;
 	GLfloat m_stunTimer;
-	
+	GLfloat timeAfterItemSpawn;
 
 	bool m_isSlow;
 	bool m_isStun;
 
+	std::shared_ptr<Item> m_healItem;
+	bool m_isActiveHealItem;
 };
