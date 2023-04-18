@@ -14,6 +14,7 @@
 #include "GameButton.h"
 #include "SpriteAnimation.h"
 #include "Math.h"
+#include "Timer.h"
 
 
 //Sound
@@ -39,6 +40,8 @@ GSRecord::~GSRecord()
 
 void GSRecord::Init()
 {
+	m_record = std::make_shared<Record>();
+	m_record->LoadRecord();
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
 	auto texture = ResourceManagers::GetInstance()->GetTexture("3995243.tga");
 
@@ -70,21 +73,32 @@ void GSRecord::Init()
 	// Setting title
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Palamecia Titling.otf");
-	m_textGameRecord = std::make_shared< Text>(shader, font, "Record", TextColor::WHITE, 2.0f);
-	m_textGameRecord->Set2DPosition(Vector2(600.0f, 80.0f));
+	m_textGameRecord = std::make_shared< Text>(shader, font, "Record", TextColor::BLACK, 4.0f);
+	m_textGameRecord->Set2DPosition(Vector2(470.0f, 120.0f));
 
 	// Top 1 title
 	font = ResourceManagers::GetInstance()->GetFont("Palamecia Titling.otf");
-	m_textTop1 = std::make_shared< Text>(shader, font, "TOP 1: ", TextColor::WHITE, 2.0f);
-	m_textTop1->Set2DPosition(Vector2(500.0f, 280.0f));
+	m_textTop1 = std::make_shared< Text>(shader, font, "TOP 1: ", TextColor::PURPLE, 3.0f);
+	m_textTop1->Set2DPosition(Vector2(400.0f, 360.0f));
 
 	// Top 2 title
-	m_textTop2 = std::make_shared< Text>(shader, font, "TOP 2: ", TextColor::WHITE, 2.0f);
-	m_textTop2->Set2DPosition(Vector2(500.0f, 340.0f));
+	m_textTop2 = std::make_shared< Text>(shader, font, "TOP 2: ", TextColor::RED, 2.5f);
+	m_textTop2->Set2DPosition(Vector2(430.0f, 420.0f));
 
 	// Top 3 title
-	m_textTop3 = std::make_shared< Text>(shader, font, "TOP 3: ", TextColor::WHITE, 2.0f);
-	m_textTop3->Set2DPosition(Vector2(500.0f, 400.0f));
+	m_textTop3 = std::make_shared< Text>(shader, font, "TOP 3: ", TextColor::BLUE, 2.0f);
+	m_textTop3->Set2DPosition(Vector2(450.0f, 475.0f));
+
+	m_recordTop1 = std::make_shared< Text>(shader, font,std::to_string( m_record->GetRecord().front()->GetTimeInMinutes()) + "m " + std::to_string(m_record->GetRecord().front()->GetTimeInSeconds()) +"s", TextColor::PURPLE, 2.6f);
+	m_recordTop1->Set2DPosition(Vector2(700.0f, 360.0f));
+
+	// Top 2 title
+	m_recordTop2 =  std::make_shared< Text>(shader, font,std::to_string( m_record->GetRecord().front()->GetTimeInMinutes()) + "m " + std::to_string(m_record->GetRecord().front()->GetTimeInSeconds()) + "s", TextColor::RED, 2.3f);
+	m_recordTop2->Set2DPosition(Vector2(700.0f, 420.0f));
+
+	// Top 3 title
+	m_recordTop3 = std::make_shared< Text>(shader, font, std::to_string(m_record->GetRecord().front()->GetTimeInMinutes()) + "m " + std::to_string(m_record->GetRecord().front()->GetTimeInSeconds()) + "s", TextColor::BLUE, 2.0f);
+	m_recordTop3->Set2DPosition(Vector2(700.0f, 475.0f));
 
 	m_KeyPress = 0;
 
@@ -182,5 +196,7 @@ void GSRecord::Draw()
 	m_textTop1->Draw();
 	m_textTop2->Draw();
 	m_textTop3->Draw();
-
+	m_recordTop1->Draw();
+	m_recordTop2->Draw();
+	m_recordTop3->Draw();
 }

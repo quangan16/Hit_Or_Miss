@@ -16,6 +16,7 @@ public:
 	void LoadRecord();
 	void RemoveRecord();
 	void ResetRecord();
+	std::vector<std::shared_ptr<Timer>> GetRecord();
 	void SortRecord();
 	void LoadRecored();
 	void DisplayRecord();

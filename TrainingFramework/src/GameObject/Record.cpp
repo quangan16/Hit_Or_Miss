@@ -74,9 +74,9 @@ void Record::SaveRecord()
 	ResetRecord();
 }
 
-void GetRecord()
+std::vector<std::shared_ptr<Timer>> Record::GetRecord()
 {
-	
+	return record;
 }
 
 void Record::RemoveRecord()

@@ -22,7 +22,8 @@
 #include "SkillObstacle.h"
 
 bool isCalled;
-
+GLfloat surviveTimeInMins;
+GLfloat surviveTimeInSecs;
 //Sound
 extern std::string SoundMenu;
 extern std::string SoundPlay;
@@ -148,7 +149,6 @@ void GSPlay::Init()
 	m_endGameButton->SetOnClick([this]() {
 		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_ENDGAME);
 		});
-
 	// You lose! text
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
@@ -229,6 +229,7 @@ void GSPlay::Init()
 void GSPlay::Exit()
 {
 	m_record->AddRecord(m_surviveTime);
+	std::cout << "lol1";
 	m_record->SaveRecord();
 }
 
@@ -237,6 +238,9 @@ void GSPlay::Exit()
 
 void GSPlay::Pause()
 {
+	m_record->AddRecord(m_surviveTime);
+	std::cout << "lol2";
+	m_record->SaveRecord();
 }
 
 void GSPlay::Resume()
@@ -547,6 +551,7 @@ void GSPlay::HandleTouchEvents(float x, float y, bool bIsPressed)
 		}
 	}
 
+
 	
 		//m_player->MoveByClick(Vector2(x, y), bIsPressed);
 	if (m_player->GetPlayerHealth() < 1)
@@ -579,10 +584,12 @@ void GSPlay::Update(float deltaTime)
 	if(m_player->GetPlayerHealth()>0)
 	{
 		m_surviveTime->CountSurviveTime(deltaTime);
+		
 	}
 	else
 	{
-		
+		surviveTimeInSecs = m_surviveTime->GetTimeInSeconds();
+		surviveTimeInMins = m_surviveTime->GetTimeInMinutes();
 	}
 	m_surviveTimeDisplay->SetText(m_surviveTime->DisplaySurviveTime());
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
