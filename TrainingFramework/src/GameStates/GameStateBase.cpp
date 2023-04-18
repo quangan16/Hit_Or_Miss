@@ -8,6 +8,7 @@
 #include "GSSetting.h"
 #include "GSPickMove.h"
 #include "GameStatebase.h"
+#include "GSRecord.h"
 
 GameStateBase::GameStateBase(StateType stateType) : m_stateType(stateType)
 {}
@@ -33,6 +34,9 @@ std::shared_ptr<GameStateBase> GameStateBase::CreateState(StateType stt)
 		break;
 	case StateType::STATE_PICKMOVE:
 		gs = std::make_shared<GSPickMove>();
+		break;
+	case StateType::STATE_RECORD:
+		gs = std::make_shared<GSRecord>();
 		break;
 	default:
 		break;

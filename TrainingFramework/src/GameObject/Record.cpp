@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <fstream>
+#include <iostream>
 
 #include "Timer.h"
 
@@ -25,25 +26,25 @@ void Record::AddRecord(std::shared_ptr<Timer> recordTime)
 			{
 				record.push_back(recordTime);
 				SortRecord();
+				record.resize(3);
 				
 			}
 			
 			else if(recordTime->GetTimeInMinutes() == record[i]->GetTimeInMinutes() && recordTime->GetTimeInSeconds() > record[i]->GetTimeInSeconds())
 			{
-				record[i] = recordTime;
+				record.push_back(recordTime);
 				SortRecord();
-				
+				record.resize(3);
 			}else
 			{
+				SortRecord();
+				record.resize(3);
 				return;
 			}
 		}
-
-	}
-	for(std::shared_ptr<Timer> lol: record)
-	{
 		
 	}
+	
 	
 	
 	
@@ -51,7 +52,7 @@ void Record::AddRecord(std::shared_ptr<Timer> recordTime)
 
 void Record::SaveRecord()
 {
-	std::ofstream outFile("game_records.txt", std::ios::trunc);
+	std::ofstream outFile("game_records.txt", std::ofstream::trunc);
 
 	if (outFile.is_open())
 	{
@@ -69,6 +70,8 @@ void Record::SaveRecord()
 		// Close the file
 		outFile.close();
 	}
+	outFile.close();
+	ResetRecord();
 }
 
 void GetRecord()
@@ -82,23 +85,23 @@ void Record::RemoveRecord()
 
 void Record::ResetRecord()
 {
+	this->record.clear();
 }
 
 void Record::SortRecord()
 {
 	// Sort the records vector using a lambda comparator that compares record times
 	std::sort(record.begin(), record.end(), [](const std::shared_ptr<Timer>& a, const std::shared_ptr<Timer>& b) {
-		if (a->GetTimeInMinutes() < b->GetTimeInMinutes()) {
+		if (a->GetTimeInMinutes() > b->GetTimeInMinutes()) {
 			return true;
 		}
-		else if (a->GetTimeInMinutes() > b->GetTimeInMinutes()) {
+		else if (a->GetTimeInMinutes() < b->GetTimeInMinutes()) {
 			return false;
 		}
 		else {
-			return a->GetTimeInSeconds() < b->GetTimeInSeconds();
+			return a->GetTimeInSeconds() > b->GetTimeInSeconds();
 		}
 		});
-	record.resize(3);
 }
 
 void Record::LoadRecord()
@@ -134,4 +137,15 @@ void Record::LoadRecord()
 		// Close the file
 		inFile.close();
 	}
+	inFile.close();
+
 }
+
+void Record::DisplayRecord()
+	{
+		for(const auto &i : record)
+		{
+			std::cout << (i)->GetTimeInMinutes()<<" " <<(i)->GetTimeInSeconds()<< std::endl;
+		}
+	}
+

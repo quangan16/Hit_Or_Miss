@@ -18,6 +18,7 @@ public:
 	void ResetRecord();
 	void SortRecord();
 	void LoadRecored();
+	void DisplayRecord();
 
 };
 

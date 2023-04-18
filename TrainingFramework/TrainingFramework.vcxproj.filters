@@ -29,6 +29,8 @@
     <ClCompile Include="src\GameStates\GSPickMove.cpp" />
     <ClCompile Include="src\GameObject\Timer.cpp" />
     <ClCompile Include="src\GameObject\Record.cpp" />
+    <ClCompile Include="src\GameObject\Item.cpp" />
+    <ClCompile Include="src\GameStates\GSRecord.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\GameObject\CircleCollider2D.h" />
@@ -63,6 +65,8 @@
     <ClInclude Include="src\GameStates\GSPickMove.h" />
     <ClInclude Include="src\GameObject\Timer.h" />
     <ClInclude Include="src\GameObject\Record.h" />
+    <ClInclude Include="src\GameObject\Item.h" />
+    <ClInclude Include="src\GameStates\GSRecord.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

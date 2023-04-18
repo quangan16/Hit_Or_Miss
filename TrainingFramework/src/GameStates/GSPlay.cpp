@@ -1,4 +1,6 @@
 #include "GSPlay.h"
+#include "GSPlay.h"
+#include "GSPlay.h"
 
 #include <memory>
 #include <memory>
@@ -233,12 +235,12 @@ void GSPlay::Init()
 	m_surviveTimeDisplay->Set2DPosition(Vector2(Globals::screenWidth / 2 - 110.f, 70.0f));
 	m_record = std::make_shared<Record>();
 	m_record->LoadRecord();
+	m_record->DisplayRecord();
 }
 
 void GSPlay::Exit()
 {
 	m_record->AddRecord(m_surviveTime);
-	std::cout << m_surviveTime->GetTimeInMinutes();
 	m_record->SaveRecord();
 }
 
@@ -692,8 +694,9 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies1[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies1[i]->GetEnemyPosition(), 50, 50))
 			{
+				
+				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
 				m_hitAnimationDuration = 2.0f;
-			
 				if(m_hitAnimationDuration>0.f)
 				{
 					m_playerHit = true;
@@ -731,8 +734,17 @@ void GSPlay::Update(float deltaTime)
 			enemies2[i]->SetColliderPosition(enemies2[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies2[i]->GetEnemyPosition(), 50, 50))
 			{
+				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
 				m_isSlow = true;
 				activeStatus2[i] = false;
+				m_hitAnimationDuration = 2.0f;
+				if (m_hitAnimationDuration > 0.f)
+				{
+					m_playerHit = true;
+					m_player->SetPlayerState(HIT);
+				}
+
+				m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 1);
 			}
 		}
@@ -742,8 +754,17 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies3[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies3[i]->GetEnemyPosition(), 50, 50))
 			{
+				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
 				m_isStun = true;
 				activeStatus3[i] = false;
+				m_hitAnimationDuration = 2.0f;
+				if (m_hitAnimationDuration > 0.f)
+				{
+					m_playerHit = true;
+					m_player->SetPlayerState(HIT);
+				}
+
+				m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
 				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 1);
 			}
 		}
@@ -753,8 +774,17 @@ void GSPlay::Update(float deltaTime)
 			enemies1[i]->SetColliderPosition(enemies4[i]->GetEnemyPosition());
 			if (m_player->CheckCollision(enemies4[i]->GetEnemyPosition(), 50, 50))
 			{
+				ResourceManagers::GetInstance()->PlaySound("hurt.wav", 0);
 				activeStatus4[i] = false;
-				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 3);
+				m_hitAnimationDuration = 2.0f;
+				if (m_hitAnimationDuration > 0.f)
+				{
+					m_playerHit = true;
+					m_player->SetPlayerState(HIT);
+				}
+
+				m_player->HandleAnimationState(m_playerAnimationSprite, m_playerAnimationList);
+				m_player->SetPlayerHealth(m_player->GetPlayerHealth() - 2);
 			}
 		}
 	}
