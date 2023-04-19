@@ -2,7 +2,7 @@
 #include "Math.h"
 
 Enemy::Enemy(std::shared_ptr<Model> model, std::shared_ptr<Shader> shader, std::shared_ptr<Texture> texture)
-    : Sprite2D(model, shader, texture), BoxCollider2D(GetEnemyPosition(), 80, 80), m_enemySpeed(500), m_enemyDirection(0)
+    : Sprite2D(model, shader, texture), BoxCollider2D(GetEnemyPosition(), 100, 100), m_enemySpeed(500), m_enemyDirection(0)
 {
 }
 

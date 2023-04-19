@@ -55,7 +55,7 @@ void GSPickMove::Init()
 	m_listButton.push_back(button);
 
 	// button playbykeyboard
-	texture = ResourceManagers::GetInstance()->GetTexture("play.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("keyboard-icon.tga");
 	button = std::make_shared<GameButton>(model, shader, texture);
 	button->Set2DPosition(Globals::screenWidth - 870.0f, 300.0f);
 	button->SetSize(150, 150);
@@ -66,7 +66,7 @@ void GSPickMove::Init()
 	m_listButton.push_back(button);
 
 	// button playbymouse
-	texture = ResourceManagers::GetInstance()->GetTexture("play.tga");
+	texture = ResourceManagers::GetInstance()->GetTexture("computer-mouse-icon.tga");
 	button = std::make_shared<GameButton>(model, shader, texture);
 	button->Set2DPosition(Globals::screenWidth - 370.0f, 300.0f);
 	button->SetSize(150, 150);

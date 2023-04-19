@@ -2,7 +2,7 @@
 
 
 Player::Player(GLint health, GLfloat speed, Vector2 position, STATE playerState, GLboolean isCooldownSkill, GLfloat skillCooldown, GLfloat skillActiveTime)
-	: BoxCollider2D(INIT_POSITION, 10, 22), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState },
+	: BoxCollider2D(INIT_POSITION, 10, 14), m_playerCurrentHealth{ health }, m_playerCurrentSpeed{ speed }, m_playerCurrentPosition{ position }, m_playerCurrentState{ playerState },
 	m_isCooldownSkill{ isCooldownSkill }, m_skillCooldown{ skillCooldown }, m_skillActiveTime{ skillActiveTime }
 {
 	this->m_flashCooldown = 0;
@@ -407,16 +407,16 @@ void Player::HandleAnimationState(std::shared_ptr<SpriteAnimation>	&m_animationS
 
 void Player::UpdateWindowBoundsCollision()
 {
-	if (this->GetColliderPosition().x - this->m_width / 2 <= 0.f) {
+	if (this->GetColliderPosition().x - this->m_width / 2 <= 100.f) {
 		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x + m_width / 2, this->GetPlayerPosition().y));
 	}
-	else if (this->GetColliderPosition().x + this->m_width / 2 >= Globals::screenWidth) {
+	else if (this->GetColliderPosition().x + this->m_width / 2 >= Globals::screenWidth-100.f) {
 		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x - m_width / 2, this->GetPlayerPosition().y));
 	}
-	if (this->GetColliderPosition().y + this->m_height / 2 >= Globals::screenHeight) {
+	if (this->GetColliderPosition().y + this->m_height / 2 >= Globals::screenHeight-120.f) {
 		this->SetPlayerPosition(Vector2(this->GetPlayerPosition().x, this->GetPlayerPosition().y - m_height / 2));
 	}
-	else if (this->GetColliderPosition().y - this->m_height / 2 <= 0.f) {
+	else if (this->GetColliderPosition().y - this->m_height / 2 <= 80.f) {
 		this->SetPlayerPosition(Vector2(	this->GetPlayerPosition().x, this->GetPlayerPosition().y + m_height / 2));
 	}
 }

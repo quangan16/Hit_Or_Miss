@@ -10,6 +10,7 @@
 #include "GameButton.h"
 #include "SpriteAnimation.h"
 #include "Math.h"
+#include "Timer.h"
 
 //Sound
 extern std::string SoundMenu;
@@ -19,8 +20,8 @@ extern int isPlayingSoundPlay;
 extern int isPlayingSound;
 
 
-extern GLfloat surviveTimeInMins;
-extern GLfloat surviveTimeInSecs;
+extern std::shared_ptr<Timer> surviveTime;
+
 GLfloat score = 0;
 GLfloat high_score = 0;
 
@@ -61,7 +62,7 @@ void GSEndGame::Init()
 	// button home
 	texture = ResourceManagers::GetInstance()->GetTexture("Home.tga");
 	std::shared_ptr<GameButton> button = std::make_shared<GameButton>(model, shader, texture);
-	button->Set2DPosition(Globals::screenWidth - 870.0f, 500.0f);
+	button->Set2DPosition(Globals::screenWidth - 860.0f, 500.0f);
 	button->SetSize(150, 150);
 	button->SetOnClick([this]() {
 		GameStateMachine::GetInstance()->ChangeState(StateType::STATE_MENU);
@@ -82,13 +83,13 @@ void GSEndGame::Init()
 	}
 	// Score title		
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
-	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
-	m_textScore = std::make_shared< Text>(shader, font, "Your survive time:  " + std::to_string((int)surviveTimeInSecs), TextColor::WHITE, 2.0f);
-	m_textScore->Set2DPosition(Vector2(400.0f, 150.0f));
+	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("NicoClean-Regular.ttf");
+	m_textScore = std::make_shared< Text>(shader, font, "Your survived time", TextColor::YELLOW, 3.0f);
+	m_textScore->Set2DPosition(Vector2(430.0f, 150.0f));
 
 	// HightScore title
-	/*m_textHighScore = std::make_shared< Text>(shader, font, "High Score: " + std::to_string((int)high_score), TextColor::WHITE, 2.0f);
-	m_textHighScore->Set2DPosition(Vector2(750.0f, 150.0f));*/
+	m_textHighScore = std::make_shared< Text>(shader, font, surviveTime->DisplaySurviveTime(), TextColor::RED, 3.0f);
+	m_textHighScore->Set2DPosition(Vector2(550.0f, 300.0f));
 
 	m_KeyPress = 0;
 	if (isPlayingSoundPlay == 1) {
@@ -154,5 +155,5 @@ void GSEndGame::Draw()
 		it->Draw();
 	}
 	m_textScore->Draw();
-	//m_textHighScore->Draw();
+	m_textHighScore->Draw();
 }

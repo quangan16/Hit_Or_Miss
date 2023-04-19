@@ -22,8 +22,7 @@
 #include "SkillObstacle.h"
 
 bool isCalled;
-GLfloat surviveTimeInMins;
-GLfloat surviveTimeInSecs;
+std::shared_ptr<Timer> surviveTime;
 //Sound
 extern std::string SoundMenu;
 extern std::string SoundPlay;
@@ -79,7 +78,7 @@ void GSPlay::Init()
 	m_obstacle3->HandleObstacleAnimation(m_obstacleAnimationSprite3, m_obstacleAnimationList3);*/
 
 	auto model = ResourceManagers::GetInstance()->GetModel("Sprite2D.nfg");
-	auto texture = ResourceManagers::GetInstance()->GetTexture("map.tga");
+	auto texture = ResourceManagers::GetInstance()->GetTexture("map_bg.tga");
 
 	// background
 	auto shader = ResourceManagers::GetInstance()->GetShader("TextureShader");
@@ -588,8 +587,8 @@ void GSPlay::Update(float deltaTime)
 	}
 	else
 	{
-		surviveTimeInSecs = m_surviveTime->GetTimeInSeconds();
-		surviveTimeInMins = m_surviveTime->GetTimeInMinutes();
+		surviveTime = m_surviveTime;
+		
 	}
 	m_surviveTimeDisplay->SetText(m_surviveTime->DisplaySurviveTime());
 	//std::cout << "passTime" << m_passedCooldownTime << "\n";
