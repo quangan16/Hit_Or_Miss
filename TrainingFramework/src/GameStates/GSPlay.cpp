@@ -454,13 +454,15 @@ void GSPlay::HandleKeyEvents(int key, bool bIsPressed)//Insert more case if you 
 
 			m_KeyPress |= 1 << 4;
 			if (m_passedCooldownTime >= m_player->GetSkillCooldown()) {
+
 				m_player->SetCooldownSkil(true);
 				m_passedCooldownTime = 0;
 			}
 			break;
 		case KEY_FLASH://Key 'F' was pressed
-			if(!m_isStun)
+			if(!m_isStun&& m_player->GetFlashCooldownTime() <= 0)
 			{
+				ResourceManagers::GetInstance()->PlaySound("flash.wav", 0);
 				m_player->FlashWithMouse(m_mouseDirection);
 			}
 			
