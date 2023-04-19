@@ -574,11 +574,11 @@ void GSPlay::Update(float deltaTime)
 		score = m_mainTimer;
 	}
 
-	//Time
-	auto shader = ResourceManagers::GetInstance()->GetShader("TextShader");
-	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
-	m_time = std::make_shared< Text>(shader, font, std::to_string((int)m_mainTimer), TextColor::RED, 2.0f);
-	m_time->Set2DPosition(Vector2(50.0f, 680.0f));
+	////Time
+	//auto shader = ResourceManagers::GetInstance()->GetShader("TextShader");
+	//std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("Brightly Crush Shine.otf");
+	//m_time = std::make_shared< Text>(shader, font, std::to_string((int)m_mainTimer), TextColor::RED, 2.0f);
+	//m_time->Set2DPosition(Vector2(50.0f, 680.0f));
 	
 	if(m_player->GetPlayerHealth()>0)
 	{
@@ -820,7 +820,7 @@ void GSPlay::Draw()
 	//Render animation list
 	if (m_player->GetPlayerHealth() > 0)
 	{
-		m_time->Draw();
+		//m_time->Draw();
 
 		for (auto it : m_playerAnimationList)
 		{
