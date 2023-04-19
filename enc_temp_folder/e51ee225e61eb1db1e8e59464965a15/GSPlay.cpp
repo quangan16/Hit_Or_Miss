@@ -222,12 +222,13 @@ void GSPlay::Init()
 	m_surviveTimeDisplay->Set2DPosition(Vector2(Globals::screenWidth / 2 - 110.f, 70.0f));
 	m_record = std::make_shared<Record>();
 	m_record->LoadRecord();
+	m_record->DisplayRecord();
 }
 
 void GSPlay::Exit()
 {
 	m_record->AddRecord(m_surviveTime);
-	
+	std::cout << "lol1";
 	m_record->SaveRecord();
 }
 
@@ -237,7 +238,7 @@ void GSPlay::Exit()
 void GSPlay::Pause()
 {
 	m_record->AddRecord(m_surviveTime);
-	
+	std::cout << "lol2";
 	m_record->SaveRecord();
 }
 

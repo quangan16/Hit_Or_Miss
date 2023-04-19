@@ -1,9 +1,9 @@
 Game Time (minutes): 0
-Game Time (seconds): 14
+Game Time (seconds): 40
 
 Game Time (minutes): 0
-Game Time (seconds): 14
+Game Time (seconds): 40
 
 Game Time (minutes): 0
-Game Time (seconds): 27
+Game Time (seconds): 40
 

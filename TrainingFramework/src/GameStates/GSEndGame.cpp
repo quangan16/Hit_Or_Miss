@@ -85,11 +85,11 @@ void GSEndGame::Init()
 	shader = ResourceManagers::GetInstance()->GetShader("TextShader");
 	std::shared_ptr<Font> font = ResourceManagers::GetInstance()->GetFont("NicoClean-Regular.ttf");
 	m_textScore = std::make_shared< Text>(shader, font, "Your survived time", TextColor::YELLOW, 3.0f);
-	m_textScore->Set2DPosition(Vector2(430.0f, 150.0f));
+	m_textScore->Set2DPosition(Vector2(300.0f, 150.0f));
 
 	// HightScore title
 	m_textHighScore = std::make_shared< Text>(shader, font, surviveTime->DisplaySurviveTime(), TextColor::RED, 3.0f);
-	m_textHighScore->Set2DPosition(Vector2(550.0f, 300.0f));
+	m_textHighScore->Set2DPosition(Vector2(500.0f, 300.0f));
 
 	m_KeyPress = 0;
 	if (isPlayingSoundPlay == 1) {
